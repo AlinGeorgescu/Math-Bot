@@ -8,7 +8,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <img src="images/logo.png" alt="Logo">
+  <img src="images/uni_logo.png" alt="UPB Logo">
 
   <h1 align="center">Math-Bot</h3>
 
