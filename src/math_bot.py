@@ -16,8 +16,9 @@ from pymessenger.bot import Bot
 
 app = Flask(__name__)
 
-ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
-VERIFY_TOKEN = os.environ['VERIFY_TOKEN']
+PORT = os.environ.get('PORT', 5000)
+ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN')
+VERIFY_TOKEN =  os.environ.get('VERIFY_TOKEN')
 bot = Bot(ACCESS_TOKEN)
 
 @app.route("/", methods=["GET", "POST"])
@@ -62,4 +63,8 @@ def hello():
         )
 
 if __name__ == "__main__":
-    app.run(port=5002, debug=True)
+    if ACCESS_TOKEN is None or VERIFY_TOKEN is None:
+        print("Token error!")
+        exit()
+
+    app.run(host='0.0.0.0', port=PORT, debug=True)
