@@ -10,19 +10,23 @@ Math Bot (C) 2021
 """
 
 import os
+import sys
 
 from flask import Flask, Response, request
 from pymessenger.bot import Bot
 
 app = Flask(__name__)
 
-PORT = os.environ.get('PORT', 5000)
-ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN')
-VERIFY_TOKEN =  os.environ.get('VERIFY_TOKEN')
+PORT = int(os.environ.get("PORT", "5000"))
+ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN")
+VERIFY_TOKEN = os.environ.get("VERIFY_TOKEN")
 bot = Bot(ACCESS_TOKEN)
 
 @app.route("/", methods=["GET", "POST"])
-def hello():
+def echo():
+    """
+    This is a simple echo function.
+    """
     if request.method == "GET":
         if request.args.get("hub.verify_token") == VERIFY_TOKEN:
             return Response(
@@ -43,28 +47,23 @@ def hello():
         for event in output["entry"]:
             messaging = event["messaging"]
 
-            for x in messaging:
-                if x.get("message"):
+            for msg in messaging:
+                if msg.get("message"):
 
-                    recipient_id = x["sender"]["id"]
+                    recipient_id = msg["sender"]["id"]
 
-                    if x["message"].get("text"):
-                        message = x["message"]["text"]
+                    if msg["message"].get("text"):
+                        message = msg["message"]["text"]
                         bot.send_text_message(recipient_id, message)
 
-                    if x["message"].get("attachments"):
-                        for att in x["message"].get("attachments"):
-                            bot.send_attachment_url(recipient_id, att["type"], att["payload"]["url"])
-
     return Response(
-            response="Success",
-            status=200,
-            mimetype="text/plain"
-        )
+        response="Success",
+        status=200,
+        mimetype="text/plain"
+    )
 
 if __name__ == "__main__":
     if ACCESS_TOKEN is None or VERIFY_TOKEN is None:
-        print("Token error!")
-        exit()
+        sys.exit("Error! Tokens not set!")
 
-    app.run(host='0.0.0.0', port=PORT, debug=True)
+    app.run(host="0.0.0.0", port=PORT, debug=True)
