@@ -27,7 +27,9 @@ def echo():
     """
     This is a simple echo function.
     """
+    print("Func called")
     if request.method == "GET":
+        print("Func is GET")
         if request.args.get("hub.verify_token") == VERIFY_TOKEN:
             return Response(
                 response=request.args.get("hub.challenge"),
@@ -42,6 +44,7 @@ def echo():
         )
 
     if request.method == "POST":
+        print("Func is POST")
         output = request.get_json()
 
         for event in output["entry"]:
@@ -55,6 +58,7 @@ def echo():
                     if msg["message"].get("text"):
                         message = msg["message"]["text"]
                         bot.send_text_message(recipient_id, message)
+                        print("MSG: " + message)
 
     return Response(
         response="Success",
