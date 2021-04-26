@@ -1,0 +1,110 @@
+﻿id,sid1,sid2,sentence1,sentence2,is_duplicate
+1,,,"If you subtract one from two, you get one.",Two minus one is one.,1
+2,,,Add ten to twelve and you get twenty-two.,Twelve plus ten equals twenty-two.,1
+3,,,50 is approximately 41% of 120,50 is around 41 percent of 120.,1
+4,,,Fifty is two hundred minux one hundred and fifty.,200 minus 150 equals 50,1
+5,,,A triangle is made out of three edges.,A triangle is a polygon with three edges,1
+6,,,Polygons are 2-dimensional shapes,"Poligons are made of straight lines, and the shape is closed",1
+7,,,There are 10 girls and 20 boys in a classroom,There are ten girls and twenty boys in a classroom,1
+8,,,A regular polygon has all angles equal and all sides equal,If a polygon has all its angles equal and all its edges equal it is a regular polygon,1
+9,,,A convex polygon has no angles pointing inwards.,"For a convex polygon, no internal angle can be more than 180°.",1
+10,,,If any internal angle is greater than 180° then the polygon is concave.,"If any internal angle is pointing inwards, then the polygon is concave",1
+11,,,"A simple polygon has only one boundary, and it doesn't cross over itself.",A simple polygon does not intersect itself and has no holes.,1
+12,,,Congruent Angles have the same angle,Congruent angles are angles with exactly the same measure,1
+13,,,"A circle is a shape consisting of all points in a plane that are at a given distance from a given point, the centre",A circle is the curve traced out by a point that moves in a plane so that its distance from a given point is constant.,1
+15,,,The circumference is the distance once around the circle.,The perimeter of a circle is its circumference,1
+16,,,The area of a circle is pi times the radius squared,The area of a circle is equal to the squared radius times the pi constant.,1
+17,,,Quarter of a circle is called a Quadrant.,A quartes is a fourth of a circle,1
+18,,,Half a circle is called a Semicircle.,A semicircle is half a circle,1
+19,,,The radius of a circle is half its diameter,The diameter is the double of the radius.,1
+20,,,The radius is the distance from the center outwards.,The radius is the distance from the center outwards,1
+21,,,an angle is the figure formed by two rays,The intersection of two rays forms an angle.,1
+22,,,"A point is an exact location, which has no size, only position.","a point is a primitive notion that models an exact location in the space, and has no length, width, or thickness.",1
+23,,,"In geometry, a line is straight, has no thickness, and extends in both directions without end.","A line is a primitive notion, with no bends, no thickness, and which extends in both directions infinitely.",1
+24,,,"a plane is a flat, two-dimensional surface that extends infinitely far.",A plane is an flat infinite surface with no thickness. ,1
+26,,,A plane is determined by three distinct non-collinear points.,"To determine a plane, you need 3 non-collinear points",1
+27,,,A line is determined by two distinct points,2 points determine a geometric line,1
+28,,,5 times 10 is 50.,Ten multiplied by five is fifty.,1
+29,,,The difference between two numbers is equal to a third number.,If you subtract two numbers you obtain a third one.,1
+30,,,The sum of ten and one thousand is one thousand ten,If you add one thousand and ten you get one thousand ten,1
+31,,,You need to be able to give people the correct amount when you buy something,You need to be able to pay the correct price when you buy something,1
+32,,,A function relates an input to an output.,a function relates an input to an output,1
+33,,,The earliest recorded beginnings of geometry can be traced to ancient Mesopotamia and Egypt,The first recordings of geometry can be located in ancient Mesopotamia and Egypt,1
+34,,,Indian mathematicians also made many important contributions in geometry.,Indian mathematicians made many important contributions in geometry,1
+35,,,4 is the square root of 16.,The square root of sixteen is four,1
+36,,,The perimeter of a square with the edge of five meters is twenty,A square with a side of 5 m has a perimeter of 20 m,1
+37,,,One meter equals one hundred centimeters.,1 m equals 100 cm,1
+38,,,If you extend a 7 cm long segment with 8 cm you get a 15cm segment,A seven centimeters segment extended with eight centimeters gives you a fifteen centimeters segment,1
+40,,,PI is equal to the Circumference divided by the Diameter of a Circle.,By dividing the circumference of a circle with its diameter you get pi's value,1
+41,,,Pi has been calculated to fifty trillion decimal places and still there is no pattern to the digits,Scientists could not find a pattern to the digits of Pi even after calculating fifty trillion decimal places,1
+42,,,Pi is equal to 3.14.,The value of pi is 3.14,1
+43,,,"""Construction"" in Geometry means to draw shapes, angles or lines accurately.","In Geometry, construction means to figures correctly",1
+44,,,"If one shape can become another using Turns, Flips and/or Slides, then the shapes are Congruent","In geometry, congruent shapes have the same size and shape",1
+45,,,There are 360 degrees in one Full Rotation (one complete circle around),One full rotation has 360 degrees,1
+46,,,Angles can be measured in radians and degrees,The units of measurement for angles are degrees and radians,1
+47,,,We often measure degrees using a protractor,A protractor is usually used to measure angles,1
+48,,,"In a triangle, the three interior angles always add to 180 degrees","In a triangle, the three interior angles always add to pi radians",1
+49,,,"a hypotenuse is the longest side of a right-angled triangle, the side opposite the right angle",a hypotenuse of a right-angled triangle is the side opposite to the right angle and is the triangle's longest edge,1
+50,,,"In a right triangle, a cathetus is either of the sides that are adjacent to the right angle. ",A cathetus is a sides adjacent to the right angle in a right-angled triangle.,1
+51,,,A right triangle has two cathetus and one hypotenuse,A right-angled triangle is made up of 1 hypotenuse and 2 cathetus,1
+52,,,"The Equilateral Triangle has three equal sides, thus all its angles are equal","In a equilateral triangle, all edges and angles are equal",1
+53,,,An Isosceles Triangle has two equal sides and angles,An isosceles triangle is made up of two equal sides and two equal angles.,1
+54,,,A Scalene triangle is a triangle that is not Isosceles and is not Equilateral.,A scalene triangle is a triangle with all its edges of different lengths and all its angles of different measures.,1
+56,,,Triangle ABC is a scalene one.,The triangle ABC has all its sides of different sizes.,1
+57,,,"There are three types of triangles: acute, right and obtuse triangles.","The 3 types of triangles are: right, acute and obtuse",1
+58,,,The area of an equilateral triangle with a given side of length x is smaller than the area of a square with the same side's length,The area of a square with edges of size x is larger than the aria of an equilateral triangle of perimeter 3x,1
+59,,,An abscissa is the horizontal value in a pair of coordinates. ,An abscissa is the x value in a pair of coordinates. ,1
+60,,,"Symmetry is when two or more parts are identical after a flip, slide or turn.","If you get an identical part after a flip, slide or turn, then it is symmetrical.",1
+61,,,"In mathematics, the sine is a trigonometric function of an angle","In geometry, the sinus is a trigonometric function of an angle",1
+62,,,"In mathematics, the cosine is a trigonometric function of an angle","In geometry, the cosinus is a trigonometric function of an angle",1
+63,,,"In mathematics, the trigonometric functions are real functions which relate an angle of a right-angled triangle to ratios of two side lengths.",The trigonometric functions are real functions which relate an angle of a right-angled triangle to ratios of two edge lengths.,1
+64,,,"A compass, also known as a pair of compasses, is a technical drawing instrument that can be used for inscribing circles or arcs.",A compass is an instrument used for drawing circles or arcs.,1
+65,,,An angle's bisector is a line that splits an angle into two equal angles. ,The line which splits an angle into two equal angles is called an angle bisector,1
+66,,,"Solid Geometry is the geometry of three-dimensional space, the kind of space we live in.","Solid geometry is the geometry of the 3D space, the kind of space we live in",1
+67,,,"plane Geometry is about flat shapes like lines, circles and triangles ... shapes that can be drawn on a piece of paper","Plane geometry is about flat shapes, such as triangles, circles, lines, or dots ... shapes that can be drawn on paper",1
+68,,,"It is called three-dimensional, or 3D, because there are three dimensions: width, depth and height.","it is called three-dimensional, or 3D, because it has three dimensions: width, depth and height",1
+69,,,The volume of a solid is how much water it could hold,a solid's volume means how much water it could hold,1
+70,,,The surface area of a solid means the area you would have to paint,a solid's surface area is the area you would have to paint.,1
+71,,,"There are two main types of solids, ""Polyhedra"", and ""Non-Polyhedra"".",there are two main types of solids: polyhedra and non-polyhedra.,1
+72,,,Polyhedra must have flat faces.,Polyhedra have all faces flat.,1
+73,,,Non-Polyhedra have at least one non-flat face ,Non-polyhedra have at least one face non-flat,1
+74,,,"In geometry, a cube is a three-dimensional solid object bounded by six square faces, with three meeting at each vertex.","in geometry, a cube is a 3D solid object bounded by six square sides with three meeting at each vertex.",1
+75,,,a tetrahedron is a pyramid made out of triangular faces.,a tetrahedron is a triangular pyramid,1
+76,,,"Spheres, toruses, cones, and cylinders are non-polyhedra shapes.","Spheres, toruses, cones and cylinders are not polyhedra shapes.",1
+77,,,"Cubes, cuboids, pyramids and prisms are polyhedral shapes","cubes, cuboids, pyramids, and prisms are polyhedra shapes",1
+78,,,"In mathematics and logic, a theorem is a non-self-evident statement that has been proven to be true",a theorem is a non-self-evident statement that has been proven to be true,1
+79,,,A pentagon is a 5-sided Polygon,a pentagon is a polygon with five edges,1
+80,,,A hexagon is a 6-sided polygon,a pentagon is a polygon with six edges,1
+81,,,An octagon is an 8-sided polygon,an octagon is a polygon with eight edges,1
+82,,,"An arc is part of the circumference of a circle, or part of any curve. ",an arc is part of a curve or a circle,1
+83,,,Lines are parallel if they are always the same distance apart and will never meet.,Parallel lines are always the same distance apart and never meet.,1
+84,,,parallel lines also point in the same direction.,Parallel lines point in the same direction,1
+85,,,"In elementary geometry, the property of being perpendicular is the relationship between two lines which meet at a right angle",The property of perpendicularity is the relationship between two lines which meet at a right angle (90 degrees),1
+86,,,There are some conditions that have to be met for parallelism,Some conditions are necessary for parallelism,1
+87,,,you can draw the triangle using a ruler,A ruler can be used for drawing triangles.,1
+88,,,"Any shape can suffer transformations (rotation, reflection, translation, resizing).","any shape can be rotated, reflected, translated,  or resized",1
+89,,,A Cartesian coordinate system in a plane is a coordinate system that specifies each point uniquely by a pair of numerical coordinates,A cartesian coordinate system is a coordinate system that has each point uniquely specified by a pair of numerical coordinates,1
+90,,,"The types of angles are: acute, right, obtuse, straight, reflex, and full rotation.","There are six types of angles: acute, right, obtuse, straight, reflex, and full rotation",1
+91,,,"The elementary arithmetic operations are addition, subtraction, division, and multiplication.","There are four elementary arithmetic operations: addition, subtraction, division, and multiplication",1
+92,,,"In geometry, the circumscribed circle or circumcircle of a polygon is a circle that passes through all the vertices of the polygon.","In geometry, the circumscribed circle of a polygon is a circle that passes through all the polygon's vertices",1
+93,,,"The inscribed circle, or the incircle, is the largest possible circle that can be drawn interior to a plane figure and is tangent to all of the polygon's edges.",The inscribed circle is the largest possible circle that can be drawn interior to a polygon and that is tangent to all its sides,1
+94,,,The perpendicular bisector of a segment has the property that each of its points is equidistant from the segment's endpoints.,The perpendicular bisector of a segment has each of its points equidistant from the segment's endpoints,1
+95,,,"In geometry, a median of a triangle is a bisector of a segment joining a vertex to the midpoint of the opposite side","In geometry, a median of a triangle is a line segment joining a vertex to the midpoint of the opposite side, thus bisecting that side",1
+96,,,An angle bisector divides the angle into two angles with equal measures. An angle only has one bisector.,An angle bisector divides the angle into two equal angles and an angle only has one bisector,1
+97,,,the centroid or geometric center of a plane figure is the arithmetic mean position of all the points in the figure,The centroid or geometric center of a 2D figure is the arithmetic mean position of all the points in the figure.,1
+98,,,Adjacent angles are two angles that share a common ray,two angles are adjacent if they share a common ray.,1
+99,,,"In its most general form, algebra is the study of mathematical symbols and the rules for manipulating these symbols",Algebra is the study of mathematical symbols and the rules for manipulating these.,1
+100,,,Geometry is a branch of mathematics dealing with spatial relationships.,The geometry is the branch of the mathematics dealing with spatial relationships,1
+14,,,"A fraction represents a part of a whole or, more generally, any number of equal parts","A fraction is a section of a whole or, more generally, any number of equal parts.",1
+25,,,"The trapezoid, parallelogram, and rhombus are three examples of polygons.","The rhombus, trapezoid, and parallelogram are three types of polygons",1
+39,,,A rectangle is a four-sided flat shape where every angle is a right angle.,A rectangle is a four-sided polygon having all its angles right,1
+55,,,A triangle has 3 edges.,A square is made up of four edges,0
+,,,Seven meters plus eight meters results in 15 m.,7mm plus 8cm equals 8.7 cm,0
+,,,Triangle ABC is a scalene one.,Triangle ABC is equilateral ,0
+,,,The radius is the distance from the center outwards.,"The diameter goes straight across the circle, through the center.",0
+,,,"In geometry, the circumscribed circle of a polygon is a circle that passes through all the polygon's vertices","In geometry, the inscribed circle of a polygon is the largest possible circle that can be drawn interior to a it and that is tangent to all its sides",0
+,,,Geometry is a branch of mathematics dealing with spatial relationships.,Geometry is a branch of mathematics dealing with number relationships.,0
+,,,"A fraction represents a part of a whole or, more generally, any number of equal parts",A fraction represents a part of a square.,0
+,,,The two lines are parallel,The two lines are perpendicular,0
+,,,"In geometry, a parallelepiped is a three-dimensional figure formed by six parallelograms.","In geometry, a parallelepiped is a two-dimensional figure formed by one parallelograms.",0
+,,,The surface area of a parallelepiped is the sum of the areas of the bounding parallelograms,The surface area of a parallelepiped is equal to the area of two circles,0
