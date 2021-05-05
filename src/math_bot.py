@@ -6,7 +6,7 @@ University Politehnica of Bucharest
 Faculty of Automatic Control and Computers
 Computer Engeneering Department
 
-Math Bot (C) 2021
+Math Bot (C) 2021 - The agent's source code
 """
 
 import os
@@ -15,12 +15,15 @@ import sys
 from flask import Flask, Response, request
 from pymessenger.bot import Bot
 
+from model import data_loader, predict
+
 app = Flask(__name__)
 
 PORT = int(os.environ.get("PORT", "5000"))
 ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN")
 VERIFY_TOKEN = os.environ.get("VERIFY_TOKEN")
 bot = Bot(ACCESS_TOKEN)
+(VOCAB, MODEL) = data_loader()
 
 @app.route("/", methods=["GET", "POST"])
 def echo():
@@ -57,8 +60,10 @@ def echo():
 
                     if msg["message"].get("text"):
                         message = msg["message"]["text"]
-                        bot.send_text_message(recipient_id, message)
-                        print("MSG: " + message)
+                        ref = "I like running in the park"
+                        res = predict(message, ref, 0.7, MODEL, VOCAB)
+                        bot.send_text_message(recipient_id, str(res))
+                        print("MSG: " + message + "\n" + str(res))
 
     return Response(
         response="Success",

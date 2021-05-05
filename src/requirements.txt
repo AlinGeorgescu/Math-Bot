@@ -1,2 +1,3 @@
 Flask==1.1.2
 -r pymessenger/requirements.txt
+-r model/requirements.txt
