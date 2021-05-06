@@ -50,20 +50,24 @@ def siamese(vocab_size, d_model=128):
     model = tl.Parallel(s_processor, s_processor)
     return model
 
-def data_loader():
+def data_loader(vocab_path, model_path):
     """Loads the vocabulary and the model from files.
+
+    Args:
+        vocab_path (str): The path to the vocabulary file.
+        model_path (str): The path to the model file.
 
     Returns:
         (defaultdict, trax.layers.combinators.Parallel): A tuple containing the
                                                vocabulary and the Siamese model.
     """
 
-    with open("data/en_vocab.txt", "r") as fin:
+    with open(vocab_path, "r") as fin:
         vocab_dict = json.load(fin)
 
     vocab = defaultdict(lambda: 0, vocab_dict)
     model = siamese(vocab_size=len(vocab))
-    model.init_from_file("trax_model/model.pkl.gz")
+    model.init_from_file(model_path)
 
     return (vocab, model)
 
@@ -192,15 +196,11 @@ def predict(sentences, threshold, model, vocab, data_generator=data_gen):
         bool: True if the sentences are duplicates, False otherwise.
     """
 
-    s1_tokens = data_tokenizer(sentences[0])  # tokenize
-    s2_tokens = data_tokenizer(sentences[1])  # tokenize
+    s1_tokens = data_tokenizer(sentences[0])         # tokenize sentence1
+    s2_tokens = data_tokenizer(sentences[1])         # tokenize sentence2
 
-    s1_tensor, s2_tensor = [], []
-
-    for word in s1_tokens:  # encode sentence1
-        s1_tensor += [vocab[word]]
-    for word in s2_tokens:  # encode sentence2
-        s2_tensor += [vocab[word]]
+    s1_tensor = [vocab[word] for word in s1_tokens]  # encode sentence1
+    s2_tensor = [vocab[word] for word in s2_tokens]  # encode sentence2
 
     s1_tensor, s2_tensor = \
             next(data_generator([s1_tensor], [s2_tensor], 1, vocab["<PAD>"]))

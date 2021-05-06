@@ -23,7 +23,9 @@ PORT = int(os.environ.get("PORT", "5000"))
 ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN")
 VERIFY_TOKEN = os.environ.get("VERIFY_TOKEN")
 bot = Bot(ACCESS_TOKEN)
-(VOCAB, MODEL) = data_loader()
+
+(VOCAB, MODEL) = data_loader("model/data/en_vocab.txt",
+                             "model/trax_model/model.pkl.gz")
 
 @app.route("/", methods=["GET", "POST"])
 def echo():
@@ -61,7 +63,7 @@ def echo():
                     if msg["message"].get("text"):
                         message = msg["message"]["text"]
                         ref = "I like running in the park"
-                        res = predict(message, ref, 0.7, MODEL, VOCAB)
+                        res = predict((message, ref), 0.7, MODEL, VOCAB)
                         bot.send_text_message(recipient_id, str(res))
                         print("MSG: " + message + "\n" + str(res))
 
@@ -73,6 +75,6 @@ def echo():
 
 if __name__ == "__main__":
     if ACCESS_TOKEN is None or VERIFY_TOKEN is None:
-        sys.exit("Error! Tokens not set!")
+        sys.exit("Error! Token(s) not set!")
 
     app.run(host="0.0.0.0", port=PORT, debug=True)
