@@ -1,0 +1,283 @@
+{
+    "courses": [
+        {
+            "course_name": "module1",
+            "course_description": "Geometry Basics I module teaches basic definitions in Plane Geometry. The course lasts about 20 minutes, after that, you will have a 10 minutes test.",
+            "course_num_steps": 10,
+            "course_num_questions": 5
+        },
+        {
+            "course_name": "module2",
+            "course_description": "Geometry Basics II module teaches basic definitions in Solid Geometry. The course lasts about 20 minutes, after that, you will have a 10 minutes test.",
+            "course_num_steps": 10,
+            "course_num_questions": 5
+        },
+        {
+            "course_name": "module3",
+            "course_description": "Geometry Theorems module teaches basic theorems in Plane Geometry. The course lasts about 20 minutes, after that, you will have a 10 minutes test.",
+            "course_num_steps": 10,
+            "course_num_questions": 5
+        }
+    ],
+    "course_steps": [
+        {
+            "course_step_inner_id": 1,
+            "course_step_text": "Geometry is a branch of mathematics that studies the shapes, positions and dimensions of things. Flat shapes like squares, circles, and triangles are a part of flat geometry and are called 2D shapes. These shapes have only two dimensions, the length and the width.",
+            "course_id": 1
+        },
+        {
+            "course_step_inner_id": 2,
+            "course_step_text": "",
+            "course_id": 1
+        },
+        {
+            "course_step_inner_id": 3,
+            "course_step_text": "",
+            "course_id": 1
+        },
+        {
+            "course_step_inner_id": 4,
+            "course_step_text": "",
+            "course_id": 1
+        },
+        {
+            "course_step_inner_id": 5,
+            "course_step_text": "",
+            "course_id": 1
+        },
+        {
+            "course_step_inner_id": 6,
+            "course_step_text": "",
+            "course_id": 1
+        },
+        {
+            "course_step_inner_id": 7,
+            "course_step_text": "",
+            "course_id": 1
+        },
+        {
+            "course_step_inner_id": 8,
+            "course_step_text": "",
+            "course_id": 1
+        },
+        {
+            "course_step_inner_id": 9,
+            "course_step_text": "",
+            "course_id": 1
+        },
+        {
+            "course_step_inner_id": 10,
+            "course_step_text": "",
+            "course_id": 1
+        },
+        {
+            "course_step_inner_id": 1,
+            "course_step_text": "",
+            "course_id": 2
+        },
+        {
+            "course_step_inner_id": 2,
+            "course_step_text": "",
+            "course_id": 2
+        },
+        {
+            "course_step_inner_id": 3,
+            "course_step_text": "",
+            "course_id": 2
+        },
+        {
+            "course_step_inner_id": 4,
+            "course_step_text": "",
+            "course_id": 2
+        },
+        {
+            "course_step_inner_id": 5,
+            "course_step_text": "",
+            "course_id": 2
+        },
+        {
+            "course_step_inner_id": 6,
+            "course_step_text": "",
+            "course_id": 2
+        },
+        {
+            "course_step_inner_id": 7,
+            "course_step_text": "",
+            "course_id": 2
+        },
+        {
+            "course_step_inner_id": 8,
+            "course_step_text": "",
+            "course_id": 2
+        },
+        {
+            "course_step_inner_id": 9,
+            "course_step_text": "",
+            "course_id": 2
+        },
+        {
+            "course_step_inner_id": 10,
+            "course_step_text": "",
+            "course_id": 2
+        },
+        {
+            "course_step_inner_id": 1,
+            "course_step_text": "",
+            "course_id": 3
+        },
+        {
+            "course_step_inner_id": 2,
+            "course_step_text": "",
+            "course_id": 3
+        },
+        {
+            "course_step_inner_id": 3,
+            "course_step_text": "",
+            "course_id": 3
+        },
+        {
+            "course_step_inner_id": 4,
+            "course_step_text": "",
+            "course_id": 3
+        },
+        {
+            "course_step_inner_id": 5,
+            "course_step_text": "",
+            "course_id": 3
+        },
+        {
+            "course_step_inner_id": 6,
+            "course_step_text": "",
+            "course_id": 3
+        },
+        {
+            "course_step_inner_id": 7,
+            "course_step_text": "",
+            "course_id": 3
+        },
+        {
+            "course_step_inner_id": 8,
+            "course_step_text": "",
+            "course_id": 3
+        },
+        {
+            "course_step_inner_id": 9,
+            "course_step_text": "",
+            "course_id": 3
+        },
+        {
+            "course_step_inner_id": 10,
+            "course_step_text": "",
+            "course_id": 3
+        }
+    ],
+    "test_steps": [
+        {
+            "test_step_inner_id": 1,
+            "test_step_text": "",
+            "test_step_ans": "",
+            "course_id": 1
+        },
+        {
+            "test_step_inner_id": 2,
+            "test_step_text": "",
+            "test_step_ans": "",
+            "course_id": 1
+        },
+        {
+            "test_step_inner_id": 3,
+            "test_step_text": "",
+            "test_step_ans": "",
+            "course_id": 1
+        },
+        {
+            "test_step_inner_id": 4,
+            "test_step_text": "",
+            "test_step_ans": "",
+            "course_id": 1
+        },
+        {
+            "test_step_inner_id": 5,
+            "test_step_text": "",
+            "test_step_ans": "",
+            "course_id": 1
+        },
+        {
+            "test_step_inner_id": 1,
+            "test_step_text": "",
+            "test_step_ans": "",
+            "course_id": 2
+        },
+        {
+            "test_step_inner_id": 2,
+            "test_step_text": "",
+            "test_step_ans": "",
+            "course_id": 2
+        },
+        {
+            "test_step_inner_id": 3,
+            "test_step_text": "",
+            "test_step_ans": "",
+            "course_id": 2
+        },
+        {
+            "test_step_inner_id": 4,
+            "test_step_text": "",
+            "test_step_ans": "",
+            "course_id": 2
+        },
+        {
+            "test_step_inner_id": 5,
+            "test_step_text": "",
+            "test_step_ans": "",
+            "course_id": 2
+        },
+        {
+            "test_step_inner_id": 1,
+            "test_step_text": "",
+            "test_step_ans": "",
+            "course_id": 3
+        },
+        {
+            "test_step_inner_id": 2,
+            "test_step_text": "",
+            "test_step_ans": "",
+            "course_id": 3
+        },
+        {
+            "test_step_inner_id": 3,
+            "test_step_text": "",
+            "test_step_ans": "",
+            "course_id": 3
+        },
+        {
+            "test_step_inner_id": 4,
+            "test_step_text": "",
+            "test_step_ans": "",
+            "course_id": 3
+        },
+        {
+            "test_step_inner_id": 5,
+            "test_step_text": "",
+            "test_step_ans": "",
+            "course_id": 3
+        }
+    ],
+    "mid_questions": [
+        {
+            "mid_question_text": "",
+            "mid_question_ans": "",
+            "course_id": 1
+        },
+        {
+            "mid_question_text": "",
+            "mid_question_ans": "",
+            "course_id": 2
+        },
+        {
+            "mid_question_text": "",
+            "mid_question_ans": "",
+            "course_id": 3
+        }
+    ]
+}

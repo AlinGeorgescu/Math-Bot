@@ -1,0 +1,101 @@
+# Alin Georgescu
+# University Politehnica of Bucharest
+# Faculty of Automatic Control and Computers
+# Computer Engeneering Department
+
+# Math Bot (C) 2021 - The Docker stack configuration
+
+version: '3.9'
+
+services:
+    database:
+      image: postgres:13.3
+      container_name: database
+      restart: unless-stopped
+      environment:
+        - TZ=Europe/Bucharest
+      env_file:
+        - ./database_con_info.env
+      volumes:
+        - db_data:/var/lib/postgresql/data
+      networks:
+        - db_net
+        - db_admin
+
+    database_adapter:
+      build:
+        context: ./
+        dockerfile: ./src/database_adapter/Dockerfile
+      container_name: database_adapter
+      depends_on:
+        - database
+      restart: unless-stopped
+      environment:
+        - TZ=Europe/Bucharest
+      env_file:
+        - ./database_con_info.env
+        - ./database_adapter_con_info.env
+      command: --debug  # This should be deleted in a production environment.
+      networks:
+        - db_net
+        - internal_net
+
+    adminer:
+      image: adminer:4.8.0-standalone
+      container_name: adminer
+      depends_on:
+        - database
+      restart: unless-stopped
+      environment:
+        - TZ=Europe/Bucharest
+      environment:
+        - ADMINER_DEFAULT_SERVER=database
+        - ADMINER_DESIGN='dracula'
+      ports:
+        - 8080:8080
+      networks:
+        - db_admin
+
+    math_bot:
+      build:
+        context: ./
+        dockerfile: ./src/math_bot/Dockerfile
+      container_name: math_bot
+      depends_on:
+        - database_adapter
+      restart: unless-stopped
+      environment:
+        - TZ=Europe/Bucharest
+      env_file:
+        - ./database_adapter_con_info.env
+        - ./math_bot_con_info.env
+      command: --debug  # This should be deleted in a production environment.
+      networks:
+        - internal_net
+        - frontend_net
+
+    frontend_adapter:
+      build:
+        context: ./
+        dockerfile: ./src/frontend_adapter/Dockerfile
+      container_name: frontend_adapter
+      depends_on:
+        - math_bot
+      restart: unless-stopped
+      environment:
+        - TZ=Europe/Bucharest
+      env_file:
+        - ./math_bot_con_info.env
+        - ./frontend_con_info.env
+      command: --debug  # This should be deleted in a production environment.
+      networks:
+        - frontend_net
+
+volumes:
+    db_data: {}
+
+networks:
+    db_net: {}
+    db_admin: {}
+    internal_net: {}
+    frontend_net: {}
