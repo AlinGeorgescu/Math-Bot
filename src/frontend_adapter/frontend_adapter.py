@@ -20,6 +20,7 @@ from argparse import ArgumentParser
 
 import jsonschema
 import telegram as tg
+from telegram import user
 import telegram.ext as tge
 
 # welcome to the course! + course_desc + Get ready to start
@@ -59,8 +60,8 @@ def start_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
 
     user = update.effective_user
 
-    payload = {"user_id" : user.id, "user_name" : user.full_name}
-    r = requests.post(f"{MATH_BOT_HOST}/api/register", json=payload)
+    query_payload = {"user_id" : user.id, "user_name" : user.full_name}
+    r = requests.post(f"{MATH_BOT_HOST}/api/register", json=query_payload)
     LOGGER.info(f"Register POST {r.status_code}")
 
     if r.status_code == 409:
@@ -199,8 +200,8 @@ def enroll_cmd(update: tg.Update, ctx: tge.CallbackContext) -> None:
 
     course_name = args[0]
     user_id = update.effective_user.id
-    payload = {"user_id" : user_id, "course_name" : course_name}
-    r = requests.post(f"{MATH_BOT_HOST}/api/enroll", json=payload)
+    query_payload = {"user_id" : user_id, "course_name" : course_name}
+    r = requests.post(f"{MATH_BOT_HOST}/api/enroll", json=query_payload)
     LOGGER.info("Enroll POST " + str(r.status_code))
 
     if r.status_code == 404:
@@ -279,34 +280,90 @@ def score_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
 
     update.message.reply_markdown_v2(reply)
 
-# def cancel_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
-#     """
-#     Cancel the user's current activity when the command /cancel is issued.
+def cancel_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
+    """
+    Cancel the user's current activity when the command /cancel is issued.
 
-#     Args:
-#         update (telegram.Update): The incoming update.
-#         _ (telegram.ext.CallbackContext): Unused callback.
-#     """
+    Args:
+        update (telegram.Update): The incoming update.
+        _ (telegram.ext.CallbackContext): Unused callback.
+    """
 
-#     LOGGER.info(f"{update.message.text} received")
+    LOGGER.info(f"{update.message.text} received")
 
-#     user_id = update.effective_user.id
-#     r = requests.post(f"{MATH_BOT_HOST}/api/cancel/{user_id}")
-#     LOGGER.info(f"Cancel POST {r.status_code}")
+    user_id = update.effective_user.id
+    r = requests.post(f"{MATH_BOT_HOST}/api/cancel/{user_id}")
+    LOGGER.info(f"Cancel POST {r.status_code}")
 
-#     if r.status_code == 404:
-#         update.message.reply_text(
-#             "You are not registered! 😡 Please type /start to begin!"
-#         )
-#         return
+    if r.status_code == 404:
+        update.message.reply_text(
+            "You are not registered! 😡 Please type /start to begin!"
+        )
+        return
+    elif r.status_code != 200:
+        update.message.reply_text("Something happened.")
+        return
 
-#     testul tau a fost anulat
-#     cursul tau a fost anulat
-#     update.message.reply_markdown_v2(reply)
+    LOGGER.info(r.text)
+
+    if r.text == "test":
+        update.message.reply_text(
+            "Your test has been cancelled! Your score was not affected."
+        )
+    elif r.text == "course":
+        update.message.reply_text(
+            "Your course has been cancelled!"
+        )
+
+def quit_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
+    """
+    Add the user to a set waiting for confirmation when the command /quit is
+    issued. After the confirmation the user will be deleted from the set and
+    database.
+
+    Args:
+        update (telegram.Update): The incoming update.
+        _ (telegram.ext.CallbackContext): Unused callback.
+    """
+
+    LOGGER.info(f"{update.message.text} received")
+
+    user_id = update.effective_user.id
+    r = requests.post(f"{MATH_BOT_HOST}/api/quit/{user_id}")
+
+    if r.status_code == 200:
+        update.message.reply_text(
+            "I am sad that you are leaving! 😥 See you around! 👋"
+        )
+    elif r.status_code == 205:
+        update.message.reply_text(
+            "Are you sure you want to quit? 🤔 All your progress will be lost! "
+            "Type Yes/Y or /quit again for confirmation."
+        )
+    elif r.status_code == 404:
+        update.message.reply_text(
+            "You are not registered! 😡 Please type /start to begin!"
+        )
+    else:
+        update.message.reply_text("Something happened.")
 
 def echo(update: tg.Update, _: tge.CallbackContext) -> None:
     """Echo the user message."""
-    update.message.reply_text(update.message.text)
+
+    user_id = update.effective_user.id
+    msg = update.message.text
+
+    query_payload = {"user_id" : user_id, "message" : msg}
+    r = requests.post(f"{MATH_BOT_HOST}/api/message", json=query_payload)
+
+    if r.status_code == 200:
+        update.message.reply_text(r.text)
+    elif r.status_code == 410:
+        update.message.reply_text(
+            "I am sad that you are leaving! 😥 See you around! 👋"
+        )
+    else:
+        update.message.reply_text("Something happened.")
 
 if __name__ == "__main__":
     parser = ArgumentParser(description="Run an adapter to the Telegram API.")
@@ -365,8 +422,8 @@ if __name__ == "__main__":
     dispatcher.add_handler(tge.CommandHandler("enroll", enroll_cmd))
     # dispatcher.add_handler(tge.CommandHandler("next", next_cmd))
     dispatcher.add_handler(tge.CommandHandler("score", score_cmd))
-    # dispatcher.add_handler(tge.CommandHandler("cancel", cancel_cmd))
-    # dispatcher.add_handler(tge.CommandHandler("quit", quit_cmd))
+    dispatcher.add_handler(tge.CommandHandler("cancel", cancel_cmd))
+    dispatcher.add_handler(tge.CommandHandler("quit", quit_cmd))
 
     # on non command i.e message - echo the message on Telegram
     dispatcher.add_handler(tge.MessageHandler(tge.Filters.text & ~tge.Filters.command, echo))

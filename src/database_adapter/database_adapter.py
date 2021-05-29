@@ -257,10 +257,10 @@ def populate_postgres():
             CREATE TABLE users (
                 user_id INT PRIMARY KEY,
                 user_name VARCHAR(255) NOT NULL,
-                user_step INT2 DEFAULT 0,
-                user_score INT2 DEFAULT 0,
+                user_step INT2 NOT NULL DEFAULT 0,
+                user_score INT2 NOT NULL DEFAULT 0,
                 course_id INT2,
-                user_test_started BOOL DEFAULT FALSE,
+                user_test_started BOOL NOT NULL DEFAULT FALSE,
                 CONSTRAINT fk_course_id
                     FOREIGN KEY(course_id)
                     REFERENCES courses(course_id)
@@ -438,7 +438,7 @@ def user_update():
             "user_name": {"type": "string"},
             "user_step": {"type": "number"},
             "user_score": {"type": "number"},
-            "course_id": {"type": "number"},
+            "course_id": {"type": ["number", "null"]},
             "user_test_started": {"type": "boolean"}
         },
         "required": ["user_id"]
