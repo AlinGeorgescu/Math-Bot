@@ -20,6 +20,8 @@ from flask import Flask, Response, request
 
 import jsonschema
 
+from model import data_loader, predict
+
 # The Flask server's object
 app = Flask(__name__)
 # Debug activation flag
@@ -196,6 +198,188 @@ def enroll_msg():
         mimetype="application/json"
     )
 
+@app.route("/api/current_step/<int:user_id>", methods=["GET"])
+def current_step(user_id=None):
+    """
+    Retrieve the current lesson / question for a user.
+
+    Returns:
+        Response: - 200 if success and the lesson's text in body.
+                  - 205 if success and the question's text in body.
+                  - 403 if the user is not enrolled in an activity.
+                  - 404 if the user is not found.
+                  - 500 if there was an internal error.
+    """
+
+    query_payload = {"user_id" : user_id,
+                     "fields": ["user_step", "course_id", "user_test_started"]}
+    r = requests.get(DB_ADAPT_HOST + "/api/user", json=query_payload)
+
+    if r.status_code == 404:
+        return Response(status=404)
+    elif r.status_code != 200:
+        return Response(status=500)
+
+    try:
+        user = r.json()[0]
+        user_step = user["user_step"]
+        course_id = user["course_id"]
+        user_test_started = user["user_test_started"]
+    except (json.decoder.JSONDecodeError, TypeError):
+        return Response(status=500)
+
+    if user_step == 0 or course_id is None:
+        return Response(status=403)
+
+    if user_test_started:
+        query_payload = {"test_step_inner_id" : user_step,
+                         "course_id" : course_id}
+        r = requests.get(DB_ADAPT_HOST + "/api/test_steps", json=query_payload)
+        if r.status_code != 200:
+            return Response(status=500)
+
+        try:
+            test_step = r.json()[0]
+            test_step_text = test_step["test_step_text"]
+            test_step_id = test_step["test_step_id"]
+        except (json.decoder.JSONDecodeError, TypeError):
+            return Response(status=500)
+
+        WAIT_ANS[user_id] = (test_step_id, course_id)
+
+        return Response(
+            status=205,
+            response="test/" + test_step_text,
+            mimetype="text/plain"
+        )
+
+    if user_step == 6:
+        r = requests.get(f"{DB_ADAPT_HOST}/api/mid_questions/{course_id}")
+        if r.status_code != 200:
+            return Response(status=500)
+
+        try:
+            mid_question = r.json()[0]
+            mid_question_text = mid_question["mid_question_text"]
+        except (json.decoder.JSONDecodeError, TypeError):
+            return Response(status=500)
+
+        WAIT_ANS[user_id] = (0, course_id)
+
+        return Response(
+            status=205,
+            response="mid/" + mid_question_text,
+            mimetype="text/plain"
+        )
+
+    query_payload = {"course_step_inner_id" : user_step,
+                     "course_id" : course_id}
+    r = requests.get(f"{DB_ADAPT_HOST}/api/course_steps", json=query_payload)
+    if r.status_code != 200:
+        return Response(status=500)
+
+    try:
+        course_step = r.json()[0]
+        course_step_text = course_step["course_step_text"]
+    except (json.decoder.JSONDecodeError, TypeError):
+        return Response(status=500)
+
+    return Response(
+        status=200,
+        response=course_step_text,
+        mimetype="text/plain"
+    )
+
+@app.route("/api/next/<int:user_id>", methods=["POST"])
+def next_msg(user_id=None):
+    """
+    Set the user to the next lesson / question.
+
+    Returns:
+        Response: - 200 if success.
+                  - 403 if the user is not enrolled in an activity.
+                  - 404 if the user is not found.
+                  - 500 if there was an internal error.
+    """
+
+    if user_id in WAIT_ANS:
+        del WAIT_ANS[user_id]
+
+    query_payload = {"user_id" : user_id,
+                     "fields": ["user_step", "course_id", "user_test_started"]}
+    r = requests.get(DB_ADAPT_HOST + "/api/user", json=query_payload)
+
+    if r.status_code == 404:
+        return Response(status=404)
+    elif r.status_code != 200:
+        return Response(status=500)
+
+    try:
+        user = r.json()[0]
+        user_step = user["user_step"]
+        course_id = user["course_id"]
+        user_test_started = user["user_test_started"]
+    except (json.decoder.JSONDecodeError, TypeError):
+        return Response(status=500)
+
+    if user_step == 0 or course_id is None:
+        return Response(status=403)
+
+    if user_test_started:
+        r = requests.get(f"{DB_ADAPT_HOST}/api/test_steps/max/{course_id}")
+        if r.status_code != 200:
+            return Response(status=500)
+
+        try:
+            max_step = r.json()[0]["max"]
+        except (json.decoder.JSONDecodeError, TypeError):
+            return Response(status=500)
+
+        if user_step >= max_step:
+            query_payload = {"user_id" : user_id, "user_step" : 0,
+                             "course_id" : None, "user_test_started" : False}
+            r = requests.put(f"{DB_ADAPT_HOST}/api/user", json=query_payload)
+
+            if r.status_code != 200:
+                return Response(status=500)
+
+            return Response(
+                status=200,
+                response="test_finished",
+                mimetype="text/plain"
+            )
+    else:
+        r = requests.get(f"{DB_ADAPT_HOST}/api/course_steps/max/{course_id}")
+        if r.status_code != 200:
+            return Response(status=500)
+
+        try:
+            max_step = r.json()[0]["max"]
+        except (json.decoder.JSONDecodeError, TypeError):
+            return Response(status=500)
+
+        if user_step >= max_step:
+            query_payload = {"user_id" : user_id, "user_step" : 1,
+                            "user_test_started" : True}
+            r = requests.put(f"{DB_ADAPT_HOST}/api/user", json=query_payload)
+
+            if r.status_code != 200:
+                return Response(status=500)
+
+            return Response(
+                status=200,
+                response="test_started",
+                mimetype="text/plain"
+            )
+
+    query_payload = {"user_id" : user_id, "user_step" : user_step + 1}
+    r = requests.put(f"{DB_ADAPT_HOST}/api/user", json=query_payload)
+
+    if r.status_code != 200:
+        return Response(status=500)
+
+    return Response(status=200)
+
 @app.route("/api/score/<int:user_id>", methods=["GET"])
 def score_msg(user_id=None):
     """
@@ -236,6 +420,9 @@ def cancel_msg(user_id=None):
                   - 404 if the user is not found.
                   - 500 if there was an internal error.
     """
+
+    if user_id in WAIT_ANS:
+        del WAIT_ANS[user_id]
 
     query_payload = {"user_id" : user_id,
                      "fields" : ["course_id", "user_test_started"]}
@@ -300,6 +487,9 @@ def quit_msg(user_id=None):
 
         WAIT_CONF_DEL.remove(user_id)
 
+        if user_id in WAIT_ANS:
+            del WAIT_ANS[user_id]
+
         return Response(status=200)
 
     WAIT_CONF_DEL.add(user_id)
@@ -312,7 +502,10 @@ def recv_msg():
     A route for receiving messages.
 
     Returns:
-        Response: - 200 in case of success and the message to be sent back.
+        Response: - 200 + "hit" if the message received was the correct answer
+                  to a question.
+                  - 200 + "miss" if the message received was the wrong answer to
+                  a question.
                   - 400 if the body is missing fields.
                   - 410 if the message was a user deletion confirmation and the
                   user was deleted.
@@ -345,6 +538,9 @@ def recv_msg():
 
             WAIT_CONF_DEL.remove(user_id)
 
+            if user_id in WAIT_ANS:
+                del WAIT_ANS[user_id]
+
             return Response(status=410)
         else:
             WAIT_CONF_DEL.remove(user_id)
@@ -355,14 +551,53 @@ def recv_msg():
                 mimetype="text/plain"
             )
 
+    if user_id in WAIT_ANS:
+        if WAIT_ANS[user_id][0] == 0:
+            course_id = WAIT_ANS[user_id][1]
 
-    # TODO
+            r = requests.get(f"{DB_ADAPT_HOST}/api/mid_questions/{course_id}")
+            if r.status_code != 200:
+                return Response(status=500)
 
-    return Response(
-        status=200,
-        response="",
-        mimetype="application/json"
-    )
+            try:
+                test_step = r.json()[0]
+                ref = test_step["mid_question_ans"]
+            except (json.decoder.JSONDecodeError, TypeError):
+                return Response(status=500)
+        else:
+            test_step_id = WAIT_ANS[user_id][0]
+
+            r = requests.get(f"{DB_ADAPT_HOST}/api/test_steps/{test_step_id}")
+            if r.status_code != 200:
+                return Response(status=500)
+
+            try:
+                test_step = r.json()[0]
+                ref = test_step["test_step_ans"]
+            except (json.decoder.JSONDecodeError, TypeError):
+                return Response(status=500)
+
+        result = predict((msg, ref), 0.7, MODEL, VOCAB)
+        if result:
+            if WAIT_ANS[user_id][0] != 0:
+                r = requests.put(f"{DB_ADAPT_HOST}/api/user/{user_id}/score")
+
+                if r.status_code != 200:
+                    return Response(status=500)
+
+            return Response(
+                status=200,
+                response="hit",
+                mimetype="text/plain"
+            )
+
+        return Response(
+            status=200,
+            response="miss",
+            mimetype="text/plain"
+        )
+
+    return Response(status=200)
 
 @app.route("/", methods=["GET"])
 def default():
@@ -395,6 +630,11 @@ if __name__ == "__main__":
     math_bot_port = int(os.getenv("MATH_BOT_PORT", "5001"))
     math_bot_addr = os.getenv("MATH_BOT_ADDR", "0.0.0.0")
 
+    QUESTION_STEP = 6
     WAIT_CONF_DEL = set()
+    WAIT_ANS = dict()
+
+    (VOCAB, MODEL) = data_loader("model/data/en_vocab.txt",
+                                 "model/trax_model/model.pkl.gz")
 
     app.run(host=math_bot_addr, port=math_bot_port, debug=DEBUG)

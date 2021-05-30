@@ -83,7 +83,6 @@ def populate_postgres():
 
     if DEBUG:
         print("Data file:", data_file, "\n")
-        print(courses_data)
 
     cursor = CONN.cursor()
 
@@ -421,6 +420,7 @@ def user_update():
         "user_id": id,
         "col_name1": value1,
         ...
+        "returning": ["col_name1", ...]
     }
 
     Returns:
@@ -439,7 +439,14 @@ def user_update():
             "user_step": {"type": "number"},
             "user_score": {"type": "number"},
             "course_id": {"type": ["number", "null"]},
-            "user_test_started": {"type": "boolean"}
+            "user_test_started": {"type": "boolean"},
+            "returning": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                    "type": "string",
+                }
+            }
         },
         "required": ["user_id"]
     }
@@ -455,8 +462,14 @@ def user_update():
         )
 
     user_id = payload["user_id"]
-    del payload["user_id"]
-    if len(payload) == 0:
+
+    if "returning" in payload:
+        returning = payload["returning"]
+        del payload["returning"]
+    else:
+        returning = ["user_id"]
+
+    if len(payload) == 1:
         return Response(
             status=400,
             response="fields",
@@ -466,17 +479,18 @@ def user_update():
     fields = payload.keys()
     values = payload.values()
     query = sql.SQL("UPDATE users SET ({})=({}) WHERE user_id={} \
-                     RETURNING user_id;").format(
+                     RETURNING {};").format(
                 sql.SQL(", ").join(map(sql.Identifier, fields)),
                 sql.SQL(", ").join(map(sql.Literal, values)),
-                sql.Literal(user_id)
+                sql.Literal(user_id),
+                sql.SQL(", ").join(map(sql.Identifier, returning)),
             )
 
     cursor = CONN.cursor()
 
     try:
         cursor.execute(query)
-        num_updates = len(cursor.fetchall())
+        results = cursor.fetchall()
     except psycopg2.DataError:
         CONN.rollback()
         return Response(
@@ -496,7 +510,45 @@ def user_update():
 
     CONN.commit()
 
-    if num_updates == 0:
+    if len(results) == 0:
+        return Response(status=404)
+
+    return Response(
+        status=200,
+        response=json.dumps(results),
+        mimetype="application/json"
+    )
+
+@app.route("/api/user/<int:user_id>/score", methods=["PUT"])
+def user_inc_score(user_id=None):
+    """
+    Increment a user's score.
+
+    Returns:
+        Response: - 200 if success.
+                  - 400 if values overflow.
+                  - 404 if the user is not found.
+    """
+
+    query = sql.SQL("UPDATE users SET user_score=user_score+1 WHERE user_id={} \
+                     RETURNING user_id;").format(
+                sql.Literal(user_id)
+            )
+
+    cursor = CONN.cursor()
+
+    try:
+        cursor.execute(query)
+        results = cursor.fetchall()
+    except psycopg2.DataError:
+        CONN.rollback()
+        return Response(status=400)
+    finally:
+        cursor.close()
+
+    CONN.commit()
+
+    if len(results) == 0:
         return Response(status=404)
 
     return Response(status=200)
@@ -698,6 +750,39 @@ def course_step_get():
         mimetype="application/json"
     )
 
+@app.route("/api/course_steps/max/<int:course_id>", methods=["GET"])
+def course_step_max_get(course_id=None):
+    """
+    Retrieve the max inner id of a course step from the database, for a given
+    course.
+
+    Returns:
+        Response: - 200 in case of success and the maximum id in the body.
+                  - 404 if the step does not exist.
+    """
+
+    query = sql.SQL("SELECT MAX(course_step_inner_id) FROM course_steps \
+                     WHERE course_id={};").format(
+                sql.Literal(course_id)
+            )
+
+    cursor = CONN.cursor(cursor_factory=RealDictCursor)
+
+    cursor.execute(query)
+    results = cursor.fetchall()
+    cursor.close()
+
+    CONN.commit()
+
+    if len(results) == 0:
+        return Response(status=404)
+
+    return Response(
+        status=200,
+        response=json.dumps(results),
+        mimetype="application/json"
+    )
+
 @app.route("/api/mid_questions/<int:course_id>", methods=["GET"])
 def mid_question_get(course_id=None):
     """
@@ -732,9 +817,10 @@ def mid_question_get(course_id=None):
     )
 
 @app.route("/api/test_steps", methods=["GET"])
-def test_step_get():
+def test_step_get_random():
     """
-    Retrieve a course test step from the database.
+    Retrieve a course test step from the database. The step is randomly chosen
+    from the pool.
 
     Returns:
         Response: - 200 in case of success and the step's object in the body.
@@ -760,8 +846,73 @@ def test_step_get():
     step_id = payload["test_step_inner_id"]
     course_id = payload["course_id"]
     query = sql.SQL("SELECT * FROM test_steps \
-                     WHERE test_step_inner_id={} AND course_id={};").format(
+                     WHERE test_step_inner_id={} AND course_id={} \
+                     ORDER BY RANDOM() LIMIT 1;").format(
                 sql.Literal(step_id),
+                sql.Literal(course_id)
+            )
+
+    cursor = CONN.cursor(cursor_factory=RealDictCursor)
+
+    cursor.execute(query)
+    results = cursor.fetchall()
+    cursor.close()
+
+    CONN.commit()
+
+    if len(results) == 0:
+        return Response(status=404)
+
+    return Response(
+        status=200,
+        response=json.dumps(results),
+        mimetype="application/json"
+    )
+
+@app.route("/api/test_steps/<int:test_step_id>", methods=["GET"])
+def test_step_get_exact(test_step_id=None):
+    """
+    Retrieve a course test step from the database given the test_step_id.
+
+    Returns:
+        Response: - 200 in case of success and the step's object in the body.
+                  - 404 if the step does not exist.
+    """
+
+    query = sql.SQL("SELECT * FROM test_steps WHERE test_step_id={};").format(
+                sql.Literal(test_step_id)
+            )
+
+    cursor = CONN.cursor(cursor_factory=RealDictCursor)
+
+    cursor.execute(query)
+    results = cursor.fetchall()
+    cursor.close()
+
+    CONN.commit()
+
+    if len(results) == 0:
+        return Response(status=404)
+
+    return Response(
+        status=200,
+        response=json.dumps(results),
+        mimetype="application/json"
+    )
+
+@app.route("/api/test_steps/max/<int:course_id>", methods=["GET"])
+def test_step_max_get(course_id=None):
+    """
+    Retrieve the max inner id of a test step from the database, for a given
+    course.
+
+    Returns:
+        Response: - 200 in case of success and the maximum id in the body.
+                  - 404 if the step does not exist.
+    """
+
+    query = sql.SQL("SELECT MAX(test_step_inner_id) FROM test_steps \
+                     WHERE course_id={};").format(
                 sql.Literal(course_id)
             )
 

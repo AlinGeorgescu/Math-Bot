@@ -20,7 +20,6 @@ from argparse import ArgumentParser
 
 import jsonschema
 import telegram as tg
-from telegram import user
 import telegram.ext as tge
 
 # welcome to the course! + course_desc + Get ready to start
@@ -71,8 +70,8 @@ def start_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
     else:
         update.message.reply_markdown_v2(
             f"Hi {user.mention_markdown_v2()}\!\n"
-            "This is MathBot🤖, your new teacher\! I will help you learn Maths "
-            "and ask you some questions after that\. Feel free to use my "
+            "This is MathBot🤖, your new teacher\! I will help you learn Maths"
+            " and ask you some questions after that\. Feel free to use my "
             "abilities\!\n"
             "Type /help for additional information\.\n"
             "Type /courses to list available lectures\.\n"
@@ -214,8 +213,10 @@ def enroll_cmd(update: tg.Update, ctx: tge.CallbackContext) -> None:
                 "That course does not exist\! 😥 Please type /enroll "
                 "*a\_valid\_course\_name* to begin\!"
             )
+
         return
-    elif r.status_code != 200:
+
+    if r.status_code != 200:
         update.message.reply_text("Something happened.")
         return
 
@@ -245,6 +246,95 @@ def enroll_cmd(update: tg.Update, ctx: tge.CallbackContext) -> None:
     )
 
     update.message.reply_markdown_v2(reply.replace(".", "\."))
+
+    r = requests.get(f"{MATH_BOT_HOST}/api/current_step/{user_id}")
+    LOGGER.info("Enroll GET " + str(r.status_code))
+
+    if r.status_code != 200 or r.text == "":
+        update.message.reply_text("Something happened.")
+        return
+
+    update.message.reply_text("Your first lesson is here:")
+    update.message.reply_text(r.text)
+    update.message.reply_text("Type /next for the next lesson.")
+
+def next_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
+    """
+    Move the user to the next step in the activity he is enrolled to, course or
+    test, when the command /next is issued.
+
+    Args:
+        update (telegram.Update): The incoming update.
+        ctx (telegram.ext.CallbackContext): The context callback.
+    """
+
+    user = update.effective_user
+    user_id = user.id
+
+    r = requests.post(f"{MATH_BOT_HOST}/api/next/{user_id}")
+    LOGGER.info("Next POST " + str(r.status_code))
+
+    if r.status_code == 403:
+        update.message.reply_text("You are not enrolled in any course!")
+        return
+
+    if r.status_code == 404:
+        update.message.reply_text(
+            "You are not registered! 😡 Please type /start to begin!"
+        )
+        return
+
+    if r.status_code != 200:
+        update.message.reply_text("Something happened.")
+        return
+
+    if r.text == "test_finished":
+        update.message.reply_markdown_v2(
+            f"Congratulations {user.mention_markdown_v2()}\!\n"
+            "You finished your test\! 👏 Type /score to check your points\.\n"
+            "Don't forget to /enroll to a new course\!"
+        )
+        return
+
+    if r.text == "test_started":
+        update.message.reply_markdown_v2(
+            f"You finished the course so fast\! 🤯\n"
+            "Your test will start now\. Answer all your questions to maximize "
+            "your score\."
+        )
+
+    r = requests.get(f"{MATH_BOT_HOST}/api/current_step/{user_id}")
+    LOGGER.info("Next GET " + str(r.status_code))
+
+    if r.status_code == 200 and r.text != "":
+        update.message.reply_text(r.text)
+        update.message.reply_text("Type /next for the next lesson.")
+        return
+
+    if r.status_code == 205 and r.text != "":
+        slash_pos = r.text.find("/")
+
+        if slash_pos == -1:
+            update.message.reply_text("Something happened.")
+            return
+
+        category = r.text[:slash_pos]
+        question = r.text[slash_pos + 1:]
+
+        if category == "test":
+            update.message.reply_text(
+                "Answer this question for 1 point or type /next to skip."
+            )
+            update.message.reply_text(question)
+        else:
+            update.message.reply_text(
+                "Answer this question or type /next to skip."
+            )
+            update.message.reply_text(question)
+
+        return
+
+    update.message.reply_text("Something happened.")
 
 def score_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
     """
@@ -347,7 +437,18 @@ def quit_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
     else:
         update.message.reply_text("Something happened.")
 
-def echo(update: tg.Update, _: tge.CallbackContext) -> None:
+def unknown(update: tg.Update, _: tge.CallbackContext) -> None:
+    """
+    The handler to be called when an unknown command is issued.
+
+    Args:
+        update (telegram.Update): The incoming update.
+        _ (telegram.ext.CallbackContext): Unused callback.
+    """
+
+    update.message.reply_text("Say what? I don't know that command. 😥")
+
+def text_msg(update: tg.Update, _: tge.CallbackContext) -> None:
     """Echo the user message."""
 
     user_id = update.effective_user.id
@@ -357,7 +458,17 @@ def echo(update: tg.Update, _: tge.CallbackContext) -> None:
     r = requests.post(f"{MATH_BOT_HOST}/api/message", json=query_payload)
 
     if r.status_code == 200:
-        update.message.reply_text(r.text)
+        if r.text == "hit":
+            update.message.reply_text(
+                "That's right! 👍 Now type /next to continue."
+            )
+        elif r.text == "miss":
+            update.message.reply_text(
+                "Your answer is not the one. 👎 You'll have your chance!\n"
+                "Now type /next to continue."
+            )
+        else:
+            update.message.reply_text("Do what you need to do.")
     elif r.status_code == 410:
         update.message.reply_text(
             "I am sad that you are leaving! 😥 See you around! 👋"
@@ -391,7 +502,7 @@ if __name__ == "__main__":
 
     if API_TOKEN is None:
         print("No token provided!")
-        while(True):
+        while True:
             continue
 
     COURSE_SCHEMA = {
@@ -420,13 +531,12 @@ if __name__ == "__main__":
     dispatcher.add_handler(tge.CommandHandler("time", time_cmd))
     dispatcher.add_handler(tge.CommandHandler("courses", courses_cmd))
     dispatcher.add_handler(tge.CommandHandler("enroll", enroll_cmd))
-    # dispatcher.add_handler(tge.CommandHandler("next", next_cmd))
+    dispatcher.add_handler(tge.CommandHandler("next", next_cmd))
     dispatcher.add_handler(tge.CommandHandler("score", score_cmd))
     dispatcher.add_handler(tge.CommandHandler("cancel", cancel_cmd))
     dispatcher.add_handler(tge.CommandHandler("quit", quit_cmd))
-
-    # on non command i.e message - echo the message on Telegram
-    dispatcher.add_handler(tge.MessageHandler(tge.Filters.text & ~tge.Filters.command, echo))
+    dispatcher.add_handler(tge.MessageHandler(tge.Filters.command, unknown))
+    dispatcher.add_handler(tge.MessageHandler(tge.Filters.text, text_msg))
 
     # Start the Bot
     updater.start_polling()

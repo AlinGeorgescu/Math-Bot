@@ -38,7 +38,7 @@ services:
       command: --debug  # This should be deleted in a production environment.
       networks:
         - db_net
-        - internal_net
+        - db_adapt_net
 
     adminer:
       image: adminer:4.8.0-standalone
@@ -71,7 +71,7 @@ services:
         - ./math_bot_con_info.env
       command: --debug  # This should be deleted in a production environment.
       networks:
-        - internal_net
+        - db_adapt_net
         - frontend_net
 
     frontend_adapter:
@@ -97,5 +97,5 @@ volumes:
 networks:
     db_net: {}
     db_admin: {}
-    internal_net: {}
+    db_adapt_net: {}
     frontend_net: {}
