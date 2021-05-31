@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# pylint: disable=R0911,R0912
 
 """
 Alin Georgescu
@@ -9,23 +10,22 @@ Computer Engeneering Department
 Math Bot (C) 2021 - Database adapter and initializer
 """
 
+import logging
 import json
-import sys
 import os
-import requests
+import sys
 
 from argparse  import ArgumentParser
-from time import sleep
+from time import localtime
 from flask import Flask, Response, request
 
 import jsonschema
+import requests
 
 from model import data_loader, predict
 
 # The Flask server's object
 app = Flask(__name__)
-# Debug activation flag
-DEBUG = None
 
 def validate_json(json_data, json_schema):
     """
@@ -77,11 +77,11 @@ def register_msg():
             mimetype="text/plain"
         )
 
-    r = requests.post(DB_ADAPT_HOST + "/api/user", json=payload)
+    req = requests.post(f"{DB_ADAPT_HOST}/api/user", json=payload)
 
     return Response(
-        status=r.status_code,
-        response=r.text,
+        status=req.status_code,
+        response=req.text,
         mimetype="text/plain"
     )
 
@@ -94,11 +94,11 @@ def courses_msg():
         Response: - 200 in case of success and the list of courses in the body.
     """
 
-    r = requests.get(DB_ADAPT_HOST + "/api/courses")
+    req = requests.get(f"{DB_ADAPT_HOST}/api/courses")
 
     return Response(
-        status=r.status_code,
-        response=r.text,
+        status=req.status_code,
+        response=req.text,
         mimetype="application/json"
     )
 
@@ -108,7 +108,9 @@ def enroll_msg():
     Enroll an user to a course / change the course the user is pursuing.
 
     Returns:
-        Response: - 200 in case of success.
+        Response: - 200 in case of success, if the new course is the same as the
+                  old one.
+                  - 200 + the information about the new course if success.
                   - 400 if the body does not have all the necessary information.
                   - 404 + "no_course" if the course is not found.
                   - 404 + "no_user" if the user is not found.
@@ -146,10 +148,11 @@ def enroll_msg():
     user_id = payload["user_id"]
     new_course_name = payload["course_name"]
 
+    # Get the course id, given the name.
     query_payload = {"course_name" : new_course_name}
-    r = requests.get(f"{DB_ADAPT_HOST}/api/course", json=query_payload)
+    req = requests.get(f"{DB_ADAPT_HOST}/api/course", json=query_payload)
 
-    if r.status_code == 404:
+    if req.status_code == 404:
         return Response(
             status=404,
             response="no_course",
@@ -157,7 +160,7 @@ def enroll_msg():
         )
 
     try:
-        new_course = r.json()[0]
+        new_course = req.json()[0]
         is_valid = validate_json(new_course, course_schema)
         if not is_valid:
             return Response(status=500)
@@ -166,10 +169,12 @@ def enroll_msg():
     except (json.decoder.JSONDecodeError, TypeError):
         return Response(status=500)
 
+    # Check if the user is enrolled and if the new course is actually the old
+    # one.
     query_payload = {"user_id" : user_id, "fields" : ["course_id"]}
-    r = requests.get(f"{DB_ADAPT_HOST}/api/user", json=query_payload)
+    req = requests.get(f"{DB_ADAPT_HOST}/api/user", json=query_payload)
 
-    if r.status_code == 404:
+    if req.status_code == 404:
         return Response(
             status=404,
             response="no_user",
@@ -177,23 +182,33 @@ def enroll_msg():
         )
 
     try:
-        user = r.json()[0]
+        user = req.json()[0]
         curr_course_id = user["course_id"]
     except (json.decoder.JSONDecodeError, TypeError):
         return Response(status=500)
 
     if new_course_id == curr_course_id:
+        # The new course is actually the old one.
         return Response(status=200)
 
+    # Change the user's course, but first clear "wait response" for the user.
+    if user_id in WAIT_ANS:
+        del WAIT_ANS[user_id]
+
+    # Drop old user quit command.
+    if user_id in WAIT_CONF_DEL:
+        WAIT_CONF_DEL.remove(user_id)
+
+    # Update user data.
     query_payload = {"user_id" : user_id, "user_step" : 1,
                      "course_id" : new_course_id, "user_test_started" : False}
-    r = requests.put(DB_ADAPT_HOST + "/api/user", json=query_payload)
+    req = requests.put(f"{DB_ADAPT_HOST}/api/user", json=query_payload)
 
-    if r.status_code != 200:
+    if req.status_code != 200:
         return Response(status=500)
 
     return Response(
-        status=r.status_code,
+        status=req.status_code,
         response=json.dumps(new_course),
         mimetype="application/json"
     )
@@ -204,7 +219,7 @@ def current_step(user_id=None):
     Retrieve the current lesson / question for a user.
 
     Returns:
-        Response: - 200 if success and the lesson's text in body.
+        Response: - 200 if success and the lesson's text (and picture) in body.
                   - 205 if success and the question's text in body.
                   - 403 if the user is not enrolled in an activity.
                   - 404 if the user is not found.
@@ -213,15 +228,16 @@ def current_step(user_id=None):
 
     query_payload = {"user_id" : user_id,
                      "fields": ["user_step", "course_id", "user_test_started"]}
-    r = requests.get(DB_ADAPT_HOST + "/api/user", json=query_payload)
+    req = requests.get(f"{DB_ADAPT_HOST}/api/user", json=query_payload)
 
-    if r.status_code == 404:
+    if req.status_code == 404:
         return Response(status=404)
-    elif r.status_code != 200:
+
+    if req.status_code != 200:
         return Response(status=500)
 
     try:
-        user = r.json()[0]
+        user = req.json()[0]
         user_step = user["user_step"]
         course_id = user["course_id"]
         user_test_started = user["user_test_started"]
@@ -231,63 +247,83 @@ def current_step(user_id=None):
     if user_step == 0 or course_id is None:
         return Response(status=403)
 
+    # If the current step is a test question, send it.
     if user_test_started:
         query_payload = {"test_step_inner_id" : user_step,
                          "course_id" : course_id}
-        r = requests.get(DB_ADAPT_HOST + "/api/test_steps", json=query_payload)
-        if r.status_code != 200:
+        req = requests.get(f"{DB_ADAPT_HOST}/api/test_steps",
+                           json=query_payload)
+        if req.status_code != 200:
             return Response(status=500)
 
         try:
-            test_step = r.json()[0]
+            test_step = req.json()[0]
             test_step_text = test_step["test_step_text"]
             test_step_id = test_step["test_step_id"]
         except (json.decoder.JSONDecodeError, TypeError):
             return Response(status=500)
 
+        # Mark "wait test response" for the user.
         WAIT_ANS[user_id] = (test_step_id, course_id)
 
         return Response(
             status=205,
-            response="test/" + test_step_text,
+            response=f"test/{test_step_text}",
             mimetype="text/plain"
         )
 
-    if user_step == 6:
-        r = requests.get(f"{DB_ADAPT_HOST}/api/mid_questions/{course_id}")
-        if r.status_code != 200:
+    # If the current step is a mid question, send it, but first check that.
+    req = requests.get(f"{DB_ADAPT_HOST}/api/course_steps/max/{course_id}")
+    if req.status_code != 200:
+        return Response(status=500)
+
+    try:
+        num_course_steps = req.json()[0]["max"]
+    except (json.decoder.JSONDecodeError, TypeError):
+        return Response(status=500)
+
+    if user_step == (num_course_steps // 2 + 1):
+        req = requests.get(f"{DB_ADAPT_HOST}/api/mid_questions/{course_id}")
+        if req.status_code != 200:
             return Response(status=500)
 
         try:
-            mid_question = r.json()[0]
+            mid_question = req.json()[0]
             mid_question_text = mid_question["mid_question_text"]
         except (json.decoder.JSONDecodeError, TypeError):
             return Response(status=500)
 
+        # Mark "wait mid question response" for the user.
         WAIT_ANS[user_id] = (0, course_id)
 
         return Response(
             status=205,
-            response="mid/" + mid_question_text,
+            response=f"mid/{mid_question_text}",
             mimetype="text/plain"
         )
 
+    # If the current step is a lesson, send it.
     query_payload = {"course_step_inner_id" : user_step,
                      "course_id" : course_id}
-    r = requests.get(f"{DB_ADAPT_HOST}/api/course_steps", json=query_payload)
-    if r.status_code != 200:
+    req = requests.get(f"{DB_ADAPT_HOST}/api/course_steps", json=query_payload)
+    if req.status_code != 200:
         return Response(status=500)
 
     try:
-        course_step = r.json()[0]
+        course_step = req.json()[0]
         course_step_text = course_step["course_step_text"]
+        course_step_url = course_step["course_step_url"]
     except (json.decoder.JSONDecodeError, TypeError):
         return Response(status=500)
 
+    payload = {"course_step_text" : course_step_text}
+    if course_step_url is not None:
+        payload["course_step_url"] = course_step_url
+
     return Response(
         status=200,
-        response=course_step_text,
-        mimetype="text/plain"
+        response=json.dumps(payload),
+        mimetype="application/json"
     )
 
 @app.route("/api/next/<int:user_id>", methods=["POST"])
@@ -302,20 +338,26 @@ def next_msg(user_id=None):
                   - 500 if there was an internal error.
     """
 
+    # Clear "wait response" for the user.
     if user_id in WAIT_ANS:
         del WAIT_ANS[user_id]
 
+    # Drop old user quit command.
+    if user_id in WAIT_CONF_DEL:
+        WAIT_CONF_DEL.remove(user_id)
+
     query_payload = {"user_id" : user_id,
                      "fields": ["user_step", "course_id", "user_test_started"]}
-    r = requests.get(DB_ADAPT_HOST + "/api/user", json=query_payload)
+    req = requests.get(f"{DB_ADAPT_HOST}/api/user", json=query_payload)
 
-    if r.status_code == 404:
+    if req.status_code == 404:
         return Response(status=404)
-    elif r.status_code != 200:
+
+    if req.status_code != 200:
         return Response(status=500)
 
     try:
-        user = r.json()[0]
+        user = req.json()[0]
         user_step = user["user_step"]
         course_id = user["course_id"]
         user_test_started = user["user_test_started"]
@@ -326,21 +368,22 @@ def next_msg(user_id=None):
         return Response(status=403)
 
     if user_test_started:
-        r = requests.get(f"{DB_ADAPT_HOST}/api/test_steps/max/{course_id}")
-        if r.status_code != 200:
+        # Check if the user finished his test - if so, unenroll the user.
+        req = requests.get(f"{DB_ADAPT_HOST}/api/test_steps/max/{course_id}")
+        if req.status_code != 200:
             return Response(status=500)
 
         try:
-            max_step = r.json()[0]["max"]
+            max_step = req.json()[0]["max"]
         except (json.decoder.JSONDecodeError, TypeError):
             return Response(status=500)
 
         if user_step >= max_step:
             query_payload = {"user_id" : user_id, "user_step" : 0,
                              "course_id" : None, "user_test_started" : False}
-            r = requests.put(f"{DB_ADAPT_HOST}/api/user", json=query_payload)
+            req = requests.put(f"{DB_ADAPT_HOST}/api/user", json=query_payload)
 
-            if r.status_code != 200:
+            if req.status_code != 200:
                 return Response(status=500)
 
             return Response(
@@ -349,21 +392,22 @@ def next_msg(user_id=None):
                 mimetype="text/plain"
             )
     else:
-        r = requests.get(f"{DB_ADAPT_HOST}/api/course_steps/max/{course_id}")
-        if r.status_code != 200:
+        # Check if the user finished his course - if so,start the user's test.
+        req = requests.get(f"{DB_ADAPT_HOST}/api/course_steps/max/{course_id}")
+        if req.status_code != 200:
             return Response(status=500)
 
         try:
-            max_step = r.json()[0]["max"]
+            max_step = req.json()[0]["max"]
         except (json.decoder.JSONDecodeError, TypeError):
             return Response(status=500)
 
         if user_step >= max_step:
             query_payload = {"user_id" : user_id, "user_step" : 1,
                             "user_test_started" : True}
-            r = requests.put(f"{DB_ADAPT_HOST}/api/user", json=query_payload)
+            req = requests.put(f"{DB_ADAPT_HOST}/api/user", json=query_payload)
 
-            if r.status_code != 200:
+            if req.status_code != 200:
                 return Response(status=500)
 
             return Response(
@@ -372,10 +416,11 @@ def next_msg(user_id=None):
                 mimetype="text/plain"
             )
 
+    # Increase the user's step.
     query_payload = {"user_id" : user_id, "user_step" : user_step + 1}
-    r = requests.put(f"{DB_ADAPT_HOST}/api/user", json=query_payload)
+    req = requests.put(f"{DB_ADAPT_HOST}/api/user", json=query_payload)
 
-    if r.status_code != 200:
+    if req.status_code != 200:
         return Response(status=500)
 
     return Response(status=200)
@@ -392,15 +437,16 @@ def score_msg(user_id=None):
     """
 
     query_payload = {"user_id" : user_id, "fields": ["user_score"]}
-    r = requests.get(DB_ADAPT_HOST + "/api/user", json=query_payload)
+    req = requests.get(f"{DB_ADAPT_HOST}/api/user", json=query_payload)
 
-    if r.status_code == 404:
+    if req.status_code == 404:
         return Response(status=404)
-    elif r.status_code != 200:
+
+    if req.status_code != 200:
         return Response(status=500)
 
     try:
-        score = r.json()[0]["user_score"]
+        score = req.json()[0]["user_score"]
     except (json.decoder.JSONDecodeError, TypeError):
         return Response(status=500)
 
@@ -421,20 +467,26 @@ def cancel_msg(user_id=None):
                   - 500 if there was an internal error.
     """
 
+    # Clear "wait response" for the user.
     if user_id in WAIT_ANS:
         del WAIT_ANS[user_id]
 
+    # Drop old user quit command.
+    if user_id in WAIT_CONF_DEL:
+        WAIT_CONF_DEL.remove(user_id)
+
     query_payload = {"user_id" : user_id,
                      "fields" : ["course_id", "user_test_started"]}
-    r = requests.get(DB_ADAPT_HOST + "/api/user", json=query_payload)
+    req = requests.get(f"{DB_ADAPT_HOST}/api/user", json=query_payload)
 
-    if r.status_code == 404:
+    if req.status_code == 404:
         return Response(status=404)
-    elif r.status_code != 200:
+
+    if req.status_code != 200:
         return Response(status=500)
 
     try:
-        user = r.json()[0]
+        user = req.json()[0]
         course_id = user["course_id"]
         user_test_started = user["user_test_started"]
     except (json.decoder.JSONDecodeError, TypeError):
@@ -442,9 +494,9 @@ def cancel_msg(user_id=None):
 
     query_payload = {"user_id" : user_id, "user_step" : 0, "course_id" : None,
                      "user_test_started" : False}
-    r = requests.put(DB_ADAPT_HOST + "/api/user", json=query_payload)
+    req = requests.put(f"{DB_ADAPT_HOST}/api/user", json=query_payload)
 
-    if r.status_code != 200:
+    if req.status_code != 200:
         return Response(status=500)
 
     if user_test_started:
@@ -452,6 +504,7 @@ def cancel_msg(user_id=None):
     elif course_id is not None:
         reply = "course"
     else:
+        # The user was not enrolled.
         reply = ""
 
     return Response(
@@ -475,17 +528,17 @@ def quit_msg(user_id=None):
     """
 
     query_payload = {"user_id" : user_id}
-    r = requests.get(DB_ADAPT_HOST + "/api/user", json=query_payload)
+    req = requests.get(f"{DB_ADAPT_HOST}/api/user", json=query_payload)
 
-    if r.status_code == 404:
+    if req.status_code == 404:
         return Response(status=404)
 
-    if r.status_code != 200:
+    if req.status_code != 200:
         return Response(status=500)
 
     if user_id in WAIT_CONF_DEL:
-        r = requests.delete(DB_ADAPT_HOST + "/api/user/" + str(user_id))
-        if r.status_code != 200:
+        req = requests.delete(f"{DB_ADAPT_HOST}/api/user/{user_id}")
+        if req.status_code != 200:
             return Response(status=500)
 
         WAIT_CONF_DEL.remove(user_id)
@@ -533,10 +586,11 @@ def recv_msg():
     user_id = payload["user_id"]
     msg = payload["message"]
 
+    # Check if the message is a confirmation for the user's quit command.
     if user_id in WAIT_CONF_DEL:
         if msg[0].lower() == "y":
-            r = requests.delete(DB_ADAPT_HOST + "/api/user/" + str(user_id))
-            if r.status_code != 200:
+            req = requests.delete(f"{DB_ADAPT_HOST}/api/user/{user_id}")
+            if req.status_code != 200:
                 return Response(status=500)
 
             WAIT_CONF_DEL.remove(user_id)
@@ -545,50 +599,50 @@ def recv_msg():
                 del WAIT_ANS[user_id]
 
             return Response(status=410)
-        else:
-            WAIT_CONF_DEL.remove(user_id)
 
-            return Response(
-                status=200,
-                response="Quit aborted!",
-                mimetype="text/plain"
-            )
+        WAIT_CONF_DEL.remove(user_id)
 
+        return Response(
+            status=200,
+            response="Quit aborted!",
+            mimetype="text/plain"
+        )
+
+    # Check if the message is an answer.
     if user_id in WAIT_ANS:
-        if WAIT_ANS[user_id][0] == 0:
-            course_id = WAIT_ANS[user_id][1]
+        (test_step_id, course_id) = WAIT_ANS[user_id]
+        # Clear "wait response" for the user.
+        del WAIT_ANS[user_id]
 
-            r = requests.get(f"{DB_ADAPT_HOST}/api/mid_questions/{course_id}")
-            if r.status_code != 200:
+        if test_step_id == 0:
+            req = requests.get(f"{DB_ADAPT_HOST}/api/mid_questions/{course_id}")
+            if req.status_code != 200:
                 return Response(status=500)
 
             try:
-                test_step = r.json()[0]
+                test_step = req.json()[0]
                 ref = test_step["mid_question_ans"]
             except (json.decoder.JSONDecodeError, TypeError):
                 return Response(status=500)
         else:
-            test_step_id = WAIT_ANS[user_id][0]
-
-            r = requests.get(f"{DB_ADAPT_HOST}/api/test_steps/{test_step_id}")
-            if r.status_code != 200:
+            req = requests.get(f"{DB_ADAPT_HOST}/api/test_steps/{test_step_id}")
+            if req.status_code != 200:
                 return Response(status=500)
 
             try:
-                test_step = r.json()[0]
+                test_step = req.json()[0]
                 ref = test_step["test_step_ans"]
             except (json.decoder.JSONDecodeError, TypeError):
                 return Response(status=500)
 
-        result = predict((msg, ref), 0.7, MODEL, VOCAB)
+        # Compare the answer to the reference question.
+        result = predict((msg, ref), COMPARE_THRESHOLD, MODEL, VOCAB)
         if result:
-            if WAIT_ANS[user_id][0] != 0:
-                r = requests.put(f"{DB_ADAPT_HOST}/api/user/{user_id}/score")
+            if test_step_id != 0:
+                req = requests.put(f"{DB_ADAPT_HOST}/api/user/{user_id}/score")
 
-                if r.status_code != 200:
+                if req.status_code != 200:
                     return Response(status=500)
-
-            del WAIT_ANS[user_id]
 
             return Response(
                 status=200,
@@ -629,16 +683,36 @@ if __name__ == "__main__":
                     help="specify if additional debug output should be shown")
     args = parser.parse_args()
 
+    # Debug activation flag
     DEBUG = args.debug
+    logging.basicConfig(format="[%(levelname)s] %(asctime)s - %(message)s",
+                        datefmt="%Y-%m-%d %H:%M:%S")
+    logging.Formatter.converter = localtime
+    logging.StreamHandler(sys.stdout)
+    # The logging module
+    LOGGER = logging.getLogger(__name__)
+
+    if DEBUG:
+        LOGGER.setLevel(logging.DEBUG)
+    else:
+        LOGGER.setLevel(logging.WARNING)
+
+    LOGGER.info("The central component started!")
+
     db_adapt_port = os.getenv("DB_ADAPT_PORT", "5000")
-    DB_ADAPT_HOST = "http://database_adapter:" + db_adapt_port
+    DB_ADAPT_HOST = f"http://database_adapter:{db_adapt_port}"
     math_bot_port = int(os.getenv("MATH_BOT_PORT", "5001"))
     math_bot_addr = os.getenv("MATH_BOT_ADDR", "0.0.0.0")
 
-    QUESTION_STEP = 6
+    # Set with user who need to confirm quit command.
     WAIT_CONF_DEL = set()
+    # Dictionary with users who need to response a question.
+    # WAIT_ANS[user_id] = (test_step_id, course_id)
+    # test_step_id will be 0 if the question is not from a test (is a mid
+    # course question).
     WAIT_ANS = dict()
 
+    COMPARE_THRESHOLD = 0.7
     (VOCAB, MODEL) = data_loader("model/data/en_vocab.txt",
                                  "model/trax_model/model.pkl.gz")
 

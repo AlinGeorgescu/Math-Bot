@@ -9,11 +9,13 @@ Computer Engeneering Department
 Math Bot (C) 2021 - Database adapter and initializer
 """
 
+import logging
 import json
 import os
+import sys
 
 from argparse  import ArgumentParser
-from time import sleep
+from time import localtime, sleep
 from flask import Flask, Response, request
 from psycopg2.extras import RealDictCursor
 from psycopg2 import sql
@@ -24,10 +26,6 @@ import psycopg2.errors
 
 # The Flask server's object
 app = Flask(__name__)
-# Database connection controller object
-CONN = None
-# Debug activation flag
-DEBUG = None
 
 def validate_json(json_data, json_schema):
     """
@@ -63,11 +61,11 @@ def init_postgres_con():
             pg_conn = psycopg2.connect(host=host, database=database,
                                        user=user, password=password)
 
-            if DEBUG:
-                print("Connection with database ready!")
+            LOGGER.info("Connection with database ready!")
 
             return pg_conn
         except psycopg2.OperationalError:
+            LOGGER.warning("Connection with database failed! Retry...")
             sleep(1)
 
 def populate_postgres():
@@ -79,10 +77,13 @@ def populate_postgres():
     data_file = os.environ.get("DATA_FILE", "courses.json")
 
     with open(data_file, "r") as fin:
-        courses_data = json.load(fin)
+        try:
+            courses_data = json.load(fin)
+        except json.decoder.JSONDecodeError:
+            LOGGER.critical("Reading data file failed!")
+            sys.exit()
 
-    if DEBUG:
-        print("Data file:", data_file, "\n")
+    LOGGER.info("Data file was read: %s", data_file)
 
     cursor = CONN.cursor()
 
@@ -96,8 +97,7 @@ def populate_postgres():
         """)
 
     if not cursor.fetchone()[0]:
-        if DEBUG:
-            print("Creating table courses")
+        LOGGER.info("Creating table courses")
 
         cursor.execute(
             """
@@ -131,15 +131,15 @@ def populate_postgres():
         """)
 
     if not cursor.fetchone()[0]:
-        if DEBUG:
-            print("Creating table course_steps")
+        LOGGER.info("Creating table course_steps")
 
         cursor.execute(
             """
             CREATE TABLE course_steps (
                 course_step_id SERIAL2 PRIMARY KEY,
                 course_step_inner_id INT2 NOT NULL,
-                course_step_text VARCHAR(500) NOT NULL,
+                course_step_text VARCHAR(1000) NOT NULL,
+                course_step_url VARCHAR(200),
                 course_id INT2 NOT NULL,
                 CONSTRAINT fk_course_id
                     FOREIGN KEY(course_id)
@@ -170,8 +170,7 @@ def populate_postgres():
         """)
 
     if not cursor.fetchone()[0]:
-        if DEBUG:
-            print("Creating table mid_questions")
+        LOGGER.info("Creating table mid_questions")
 
         cursor.execute(
             """
@@ -209,8 +208,7 @@ def populate_postgres():
         """)
 
     if not cursor.fetchone()[0]:
-        if DEBUG:
-            print("Creating table test_steps")
+        LOGGER.info("Creating table test_steps")
 
         cursor.execute(
             """
@@ -248,8 +246,7 @@ def populate_postgres():
         """)
 
     if not cursor.fetchone()[0]:
-        if DEBUG:
-            print("Creating table users")
+        LOGGER.info("Creating table users")
 
         cursor.execute(
             """
@@ -958,10 +955,26 @@ if __name__ == "__main__":
                     help="specify if additional debug output should be shown")
     args = parser.parse_args()
 
+    # Debug activation flag
     DEBUG = args.debug
+    logging.basicConfig(format="[%(levelname)s] %(asctime)s - %(message)s",
+                        datefmt="%Y-%m-%d %H:%M:%S")
+    logging.Formatter.converter = localtime
+    logging.StreamHandler(sys.stdout)
+    # The logging module
+    LOGGER = logging.getLogger(__name__)
+
+    if DEBUG:
+        LOGGER.setLevel(logging.DEBUG)
+    else:
+        LOGGER.setLevel(logging.WARNING)
+
+    LOGGER.info("Database adapter started!")
+
     db_adapt_port = int(os.getenv("DB_ADAPT_PORT", "5000"))
     db_adapt_addr = os.getenv("DB_ADAPT_ADDR", "0.0.0.0")
 
+    # Database connection controller object
     CONN = init_postgres_con()
     populate_postgres()
 

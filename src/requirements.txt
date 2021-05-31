@@ -1,4 +1,0 @@
--r database-adapter/requirements.txt
--r frontend-adapter/requirements.txt
--r pymessenger/requirements.txt
--r model/requirements.txt

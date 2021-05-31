@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# pylint: disable=W1401
 
 """
 Alin Georgescu
@@ -12,21 +13,15 @@ Math Bot (C) 2021 - The adapter to the Facebook Messenger frontend.
 import logging
 import json
 import os
-import requests
 import sys
 
-from time import localtime, strftime
 from argparse import ArgumentParser
+from time import localtime, strftime
 
 import jsonschema
+import requests
 import telegram as tg
 import telegram.ext as tge
-
-# welcome to the course! + course_desc + Get ready to start
-
-# Debug activation flag
-DEBUG = None
-LOGGER = None
 
 def validate_json(json_data, json_schema):
     """
@@ -55,17 +50,17 @@ def start_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
         _ (telegram.ext.CallbackContext): Unused callback.
     """
 
-    LOGGER.info(f"{update.message.text} received")
+    LOGGER.info("%s received", update.message.text)
 
     user = update.effective_user
 
     query_payload = {"user_id" : user.id, "user_name" : user.full_name}
-    r = requests.post(f"{MATH_BOT_HOST}/api/register", json=query_payload)
-    LOGGER.info(f"Register POST {r.status_code}")
+    req = requests.post(f"{MATH_BOT_HOST}/api/register", json=query_payload)
+    LOGGER.info("Register POST %s", req.status_code)
 
-    if r.status_code == 409:
+    if req.status_code == 409:
         update.message.reply_text("We already started. 🤔")
-    elif r.status_code != 201:
+    elif req.status_code != 201:
         update.message.reply_text("Something happened.")
     else:
         update.message.reply_markdown_v2(
@@ -88,7 +83,7 @@ def help_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
         _ (telegram.ext.CallbackContext): Unused callback.
     """
 
-    LOGGER.info(f"{update.message.text} received")
+    LOGGER.info("%s received", update.message.text)
 
     update.message.reply_markdown_v2(
         "I am MathBot🤖, the new Maths teacher in town\!\n"
@@ -114,7 +109,7 @@ def gdpr_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
         _ (telegram.ext.CallbackContext): Unused callback.
     """
 
-    LOGGER.info(f"{update.message.text} received")
+    LOGGER.info("%s received", update.message.text)
 
     update.message.reply_markdown_v2(
         "Collected data:\n  \- username\n  \- user id\n  \- score\n"
@@ -136,7 +131,7 @@ def time_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
         _ (telegram.ext.CallbackContext): Unused callback.
     """
 
-    LOGGER.info(f"{update.message.text} received")
+    LOGGER.info("%s received", update.message.text)
 
     local_time = strftime("%d-%m-%Y %H:%M:%S", localtime())
 
@@ -151,18 +146,18 @@ def courses_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
         _ (telegram.ext.CallbackContext): Unused callback.
     """
 
-    LOGGER.info(f"{update.message.text} received")
+    LOGGER.info("%s received", update.message.text)
 
-    r = requests.get(f"{MATH_BOT_HOST}/api/courses")
-    LOGGER.info(f"Courses GET {r.status_code}")
+    req = requests.get(f"{MATH_BOT_HOST}/api/courses")
+    LOGGER.info("Courses GET %s", req.status_code)
 
-    if r.status_code != 200:
+    if req.status_code != 200:
         update.message.reply_text("Something happened.")
         return
 
     reply = "The list of available courses is:"
     try:
-        for course in r.json():
+        for course in req.json():
             is_valid = validate_json(course, COURSE_SCHEMA)
             if not is_valid:
                 update.message.reply_text("Something happened.")
@@ -187,24 +182,24 @@ def enroll_cmd(update: tg.Update, ctx: tge.CallbackContext) -> None:
         ctx (telegram.ext.CallbackContext): The context callback.
     """
 
-    LOGGER.info(f"{update.message.text} received")
+    LOGGER.info("%s received", update.message.text)
 
-    args = ctx.args
-    if len(args) < 1:
+    cmd_args = ctx.args
+    if len(cmd_args) < 1:
         update.message.reply_markdown_v2(
             "Wrong command\! ☠️ Please provide a course name\!\n"
             "e\.g\. /enroll *course\_name*"
         )
         return
 
-    course_name = args[0]
+    course_name = cmd_args[0]
     user_id = update.effective_user.id
     query_payload = {"user_id" : user_id, "course_name" : course_name}
-    r = requests.post(f"{MATH_BOT_HOST}/api/enroll", json=query_payload)
-    LOGGER.info("Enroll POST " + str(r.status_code))
+    req = requests.post(f"{MATH_BOT_HOST}/api/enroll", json=query_payload)
+    LOGGER.info("Enroll POST %s", req.status_code)
 
-    if r.status_code == 404:
-        if r.text == "no_user":
+    if req.status_code == 404:
+        if req.text == "no_user":
             update.message.reply_text(
                 "You are not registered! 😡 Please type /start to begin!"
             )
@@ -216,15 +211,15 @@ def enroll_cmd(update: tg.Update, ctx: tge.CallbackContext) -> None:
 
         return
 
-    if r.status_code != 200:
+    if req.status_code != 200:
         update.message.reply_text("Something happened.")
         return
 
-    if r.text is None or r.text == "":
+    if req.text is None or req.text == "":
         return
 
     try:
-        course = r.json()
+        course = req.json()
     except json.decoder.JSONDecodeError:
         update.message.reply_text("Something happened.")
         return
@@ -247,16 +242,28 @@ def enroll_cmd(update: tg.Update, ctx: tge.CallbackContext) -> None:
 
     update.message.reply_markdown_v2(reply.replace(".", "\."))
 
-    r = requests.get(f"{MATH_BOT_HOST}/api/current_step/{user_id}")
-    LOGGER.info("Enroll GET " + str(r.status_code))
+    req = requests.get(f"{MATH_BOT_HOST}/api/current_step/{user_id}")
+    LOGGER.info("Enroll GET %s", req.status_code)
 
-    if r.status_code != 200 or r.text == "":
+    if req.status_code != 200 or req.text == "":
         update.message.reply_text("Something happened.")
-        return
+    else:
+        # The message is a course step.
+        try:
+            course_step = req.json()
+        except json.decoder.JSONDecodeError:
+            update.message.reply_text("Something happened.")
+            return
 
-    update.message.reply_text("Your first lesson is here:")
-    update.message.reply_text(r.text)
-    update.message.reply_text("Type /next for the next lesson.")
+        update.message.reply_text("Your first lesson is here:")
+        course_step_text = course_step["course_step_text"]
+        update.message.reply_text(course_step_text)
+
+        if "course_step_url" in course_step:
+            course_step_url = course_step["course_step_url"]
+            update.message.reply_photo(course_step_url)
+
+        update.message.reply_text("Type /next for the next lesson.")
 
 def next_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
     """
@@ -268,27 +275,29 @@ def next_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
         ctx (telegram.ext.CallbackContext): The context callback.
     """
 
+    LOGGER.info("%s received", update.message.text)
+
     user = update.effective_user
     user_id = user.id
 
-    r = requests.post(f"{MATH_BOT_HOST}/api/next/{user_id}")
-    LOGGER.info("Next POST " + str(r.status_code))
+    req = requests.post(f"{MATH_BOT_HOST}/api/next/{user_id}")
+    LOGGER.info("Next POST %s", req.status_code)
 
-    if r.status_code == 403:
+    if req.status_code == 403:
         update.message.reply_text("You are not enrolled in any course!")
         return
 
-    if r.status_code == 404:
+    if req.status_code == 404:
         update.message.reply_text(
             "You are not registered! 😡 Please type /start to begin!"
         )
         return
 
-    if r.status_code != 200:
+    if req.status_code != 200:
         update.message.reply_text("Something happened.")
         return
 
-    if r.text == "test_finished":
+    if req.text == "test_finished":
         update.message.reply_markdown_v2(
             f"Congratulations {user.mention_markdown_v2()}\!\n"
             "You finished your test\! 👏 Type /score to check your points\.\n"
@@ -296,30 +305,43 @@ def next_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
         )
         return
 
-    if r.text == "test_started":
+    if req.text == "test_started":
         update.message.reply_markdown_v2(
-            f"You finished the course so fast\! 🤯\n"
+            "You finished the course so fast\! 🤯\n"
             "Your test will start now\. Answer all your questions to maximize "
             "your score\."
         )
 
-    r = requests.get(f"{MATH_BOT_HOST}/api/current_step/{user_id}")
-    LOGGER.info("Next GET " + str(r.status_code))
+    req = requests.get(f"{MATH_BOT_HOST}/api/current_step/{user_id}")
+    LOGGER.info("Next GET %s", req.status_code)
 
-    if r.status_code == 200 and r.text != "":
-        update.message.reply_text(r.text)
+    if req.status_code == 200:
+        # The message is a course step.
+        try:
+            course_step = req.json()
+        except json.decoder.JSONDecodeError:
+            return
+
+        course_step_text = course_step["course_step_text"]
+        update.message.reply_text(course_step_text)
+
+        if "course_step_url" in course_step:
+            course_step_url = course_step["course_step_url"]
+            update.message.reply_photo(course_step_url)
+
         update.message.reply_text("Type /next for the next lesson.")
         return
 
-    if r.status_code == 205 and r.text != "":
-        slash_pos = r.text.find("/")
+    if req.status_code == 205 and req.text != "":
+        # The message is a mid question or a test step.
+        slash_pos = req.text.find("/")
 
         if slash_pos == -1:
             update.message.reply_text("Something happened.")
             return
 
-        category = r.text[:slash_pos]
-        question = r.text[slash_pos + 1:]
+        category = req.text[:slash_pos]
+        question = req.text[slash_pos + 1:]
 
         if category == "test":
             update.message.reply_text(
@@ -331,10 +353,8 @@ def next_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
                 "Answer this question or type /next to skip."
             )
             update.message.reply_text(question)
-
-        return
-
-    update.message.reply_text("Something happened.")
+    else:
+        update.message.reply_text("Something happened.")
 
 def score_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
     """
@@ -345,22 +365,22 @@ def score_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
         _ (telegram.ext.CallbackContext): Unused callback.
     """
 
-    LOGGER.info(f"{update.message.text} received")
+    LOGGER.info("%s received", update.message.text)
 
     user_id = update.effective_user.id
-    r = requests.get(f"{MATH_BOT_HOST}/api/score/{user_id}")
-    LOGGER.info(f"Score GET {r.status_code}")
+    req = requests.get(f"{MATH_BOT_HOST}/api/score/{user_id}")
+    LOGGER.info("Score GET %s", req.status_code)
 
-    if r.status_code == 404:
+    if req.status_code == 404:
         update.message.reply_text(
             "You are not registered! 😡 Please type /start to begin!"
         )
-    elif r.status_code != 200:
+    elif req.status_code != 200:
         update.message.reply_text("Something happened.")
         return
 
-    reply = f"Your score is: {r.text}\. "
-    score = int(r.text)
+    reply = f"Your score is: {req.text}\. "
+    score = int(req.text)
     if score < 10:
         reply += "Keep learning rookie\! 🤙"
     elif score < 15:
@@ -379,28 +399,27 @@ def cancel_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
         _ (telegram.ext.CallbackContext): Unused callback.
     """
 
-    LOGGER.info(f"{update.message.text} received")
+    LOGGER.info("%s received", update.message.text)
 
     user_id = update.effective_user.id
-    r = requests.post(f"{MATH_BOT_HOST}/api/cancel/{user_id}")
-    LOGGER.info(f"Cancel POST {r.status_code}")
+    req = requests.post(f"{MATH_BOT_HOST}/api/cancel/{user_id}")
+    LOGGER.info("Cancel POST %s", req.status_code)
 
-    if r.status_code == 404:
+    if req.status_code == 404:
         update.message.reply_text(
             "You are not registered! 😡 Please type /start to begin!"
         )
         return
-    elif r.status_code != 200:
+
+    if req.status_code != 200:
         update.message.reply_text("Something happened.")
         return
 
-    LOGGER.info(r.text)
-
-    if r.text == "test":
+    if req.text == "test":
         update.message.reply_text(
             "Your test has been cancelled! Your score was not affected."
         )
-    elif r.text == "course":
+    elif req.text == "course":
         update.message.reply_text(
             "Your course has been cancelled!"
         )
@@ -416,21 +435,22 @@ def quit_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
         _ (telegram.ext.CallbackContext): Unused callback.
     """
 
-    LOGGER.info(f"{update.message.text} received")
+    LOGGER.info("%s received", update.message.text)
 
     user_id = update.effective_user.id
-    r = requests.post(f"{MATH_BOT_HOST}/api/quit/{user_id}")
+    req = requests.post(f"{MATH_BOT_HOST}/api/quit/{user_id}")
+    LOGGER.info("Quit POST %s", req.status_code)
 
-    if r.status_code == 200:
+    if req.status_code == 200:
         update.message.reply_text(
             "I am sad that you are leaving! 😥 See you around! 👋"
         )
-    elif r.status_code == 205:
+    elif req.status_code == 205:
         update.message.reply_text(
             "Are you sure you want to quit? 🤔 All your progress will be lost! "
             "Type Yes/Y or /quit again for confirmation."
         )
-    elif r.status_code == 404:
+    elif req.status_code == 404:
         update.message.reply_text(
             "You are not registered! 😡 Please type /start to begin!"
         )
@@ -446,30 +466,42 @@ def unknown(update: tg.Update, _: tge.CallbackContext) -> None:
         _ (telegram.ext.CallbackContext): Unused callback.
     """
 
+    LOGGER.info("Unknown received %s", update.message.text)
+
     update.message.reply_text("Say what? I don't know that command. 😥")
 
 def text_msg(update: tg.Update, _: tge.CallbackContext) -> None:
-    """Echo the user message."""
+    """
+    The text message handler. This checks if the message is a command
+    confirmation, question answer or other message.
+
+    Args:
+        update (telegram.Update): The incoming update.
+        _ (telegram.ext.CallbackContext): Unused callback.
+    """
+
+    LOGGER.info("Message received: %s", update.message.text)
 
     user_id = update.effective_user.id
     msg = update.message.text
 
     query_payload = {"user_id" : user_id, "message" : msg}
-    r = requests.post(f"{MATH_BOT_HOST}/api/message", json=query_payload)
+    req = requests.post(f"{MATH_BOT_HOST}/api/message", json=query_payload)
+    LOGGER.info("Message POST %s", req.status_code)
 
-    if r.status_code == 200:
-        if r.text == "hit":
+    if req.status_code == 200:
+        if req.text == "hit":
             update.message.reply_text(
                 "That's right! 👍 Now type /next to continue."
             )
-        elif r.text == "miss":
+        elif req.text == "miss":
             update.message.reply_text(
                 "Your answer is not the one. 👎 You'll have your chance!\n"
                 "Now type /next to continue."
             )
         else:
             update.message.reply_text("Do what you need to do.")
-    elif r.status_code == 410:
+    elif req.status_code == 410:
         update.message.reply_text(
             "I am sad that you are leaving! 😥 See you around! 👋"
         )
@@ -482,11 +514,13 @@ if __name__ == "__main__":
                     help="specify if additional debug output should be shown")
     args = parser.parse_args()
 
+    # Debug activation flag
     DEBUG = args.debug
     logging.basicConfig(format="[%(levelname)s] %(asctime)s - %(message)s",
                         datefmt="%Y-%m-%d %H:%M:%S")
     logging.Formatter.converter = localtime
     logging.StreamHandler(sys.stdout)
+    # The logging module
     LOGGER = logging.getLogger(__name__)
 
     if DEBUG:
@@ -518,13 +552,12 @@ if __name__ == "__main__":
                      "course_num_steps", "course_num_questions"]
     }
 
-     # Create the Updater and pass it your bot's token.
+    # The Telegram updater.
     updater = tge.Updater(API_TOKEN)
-
-    # Get the dispatcher to register handlers
+    # Dispatcher for registering handlers.
     dispatcher = updater.dispatcher
 
-    # on different commands - answer in Telegram
+    # Telegram command handlers.
     dispatcher.add_handler(tge.CommandHandler("start", start_cmd))
     dispatcher.add_handler(tge.CommandHandler("help", help_cmd))
     dispatcher.add_handler(tge.CommandHandler("gdpr", gdpr_cmd))
@@ -535,13 +568,14 @@ if __name__ == "__main__":
     dispatcher.add_handler(tge.CommandHandler("score", score_cmd))
     dispatcher.add_handler(tge.CommandHandler("cancel", cancel_cmd))
     dispatcher.add_handler(tge.CommandHandler("quit", quit_cmd))
+    # Telegram handler for unknown commands.
     dispatcher.add_handler(tge.MessageHandler(tge.Filters.command, unknown))
+    # Telegram handler for text messages.
     dispatcher.add_handler(tge.MessageHandler(tge.Filters.text, text_msg))
 
     # Start the Bot
     updater.start_polling()
 
-    # Run the bot until you press Ctrl-C or the process receives SIGINT,
-    # SIGTERM or SIGABRT. This should be used most of the time, since
-    # start_polling() is non-blocking and will stop the bot gracefully.
+    # Run the bot until Ctrl-C is pressed or the process receives SIGINT,
+    # SIGTERM or SIGABRT.
     updater.idle()
