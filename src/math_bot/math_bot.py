@@ -428,6 +428,11 @@ def cancel_msg(user_id=None):
                      "fields" : ["course_id", "user_test_started"]}
     r = requests.get(DB_ADAPT_HOST + "/api/user", json=query_payload)
 
+    if r.status_code == 404:
+        return Response(status=404)
+    elif r.status_code != 200:
+        return Response(status=500)
+
     try:
         user = r.json()[0]
         course_id = user["course_id"]
@@ -439,9 +444,7 @@ def cancel_msg(user_id=None):
                      "user_test_started" : False}
     r = requests.put(DB_ADAPT_HOST + "/api/user", json=query_payload)
 
-    if r.status_code == 404:
-        return Response(status=404)
-    elif r.status_code != 200:
+    if r.status_code != 200:
         return Response(status=500)
 
     if user_test_started:
@@ -584,6 +587,8 @@ def recv_msg():
 
                 if r.status_code != 200:
                     return Response(status=500)
+
+            del WAIT_ANS[user_id]
 
             return Response(
                 status=200,
