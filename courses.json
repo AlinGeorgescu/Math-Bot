@@ -22,56 +22,55 @@
     "course_steps": [
         {
             "course_step_inner_id": 1,
-            "course_step_text": "Geometry is one of the oldest branches of mathematics and its name originates from the Ancient Greek, meaning \"measuring the Earth\". Geometry studies the shapes, positions and dimensions of things. Flat shapes like squares, circles, triangles, or even dots are a part of flat geometry and are called 2D shapes. These shapes have only two dimensions, the length and the width. The main means of representing geometric notions is drawing on a sheet or a board, thus obtaining a representation of geometric figures. In order to be able to draw as correctly as possible, on a physical support, the following tools are needed: ruler, compass, square, protractor.",
-            "course_step_url": "https://www.mathsisfun.com/geometry/images/drawing-compass.gif",
+            "course_step_text": "Geometry is one of the oldest branches of mathematics and its name originates from the Ancient Greek, meaning \"measuring the Earth\". Geometry studies the shapes, positions and dimensions of things. Flat shapes like squares, circles, triangles, or even dots are a part of flat geometry and are called 2D shapes. These shapes have only two dimensions, the length and the width. The main means of representing geometric notions is drawing on a sheet or a board, thus obtaining a representation of geometric figures. In order to be able to draw as correctly as possible, on a physical support, the following tools are needed: ruler, compass, protractor.",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module1/instruments.png",
             "course_id": 1
         },
         {
             "course_step_inner_id": 2,
-            "course_step_text": "The point and line are the simplest notions of geometry and represent abstract notions. A point represents an exact location in the space, which has no length, width, or thickness. A line is an infinite collection of points, one near other, with no curvature and thickness. It only has infinite length. In geometry, the points are denoted with capital letters (A, B, C), and the lines with small letters (a, b, c). Any two points are collinear - we can always draw a line joining the 2 points. Conversely, if several points cannot be joined by a single line, then they are noncollinear.",
-            "course_step_url": "https://www.mathsisfun.com/geometry/images/drawing-compass.gif",
+            "course_step_text": "The point and line are the simplest notions of geometry and represent abstract notions. A point represents an exact location in the space, which has no length, width, or thickness. A line is an infinite collection of points, one near other, with no curvature and thickness. It only has infinite length. In geometry, the points are denoted with capital letters (A, B, C), and the lines with small letters (a, b, c). Any two points are collinear - we can always draw a line joining the 2 points. Conversely, if several points cannot be joined by a single line, then they are noncollinear. We can also denote a line by using 2 collinear points: AB.",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module1/points_lines.png",
             "course_id": 1
         },
         {
             "course_step_inner_id": 3,
             "course_step_text": "A ray is half of a line. Given a line and any point O on it, we may consider O as decomposing this line into two parts. Each such part is called a ray and the point O is called its origin. The point O may or may not be a member of the ray. Intuitively, a ray consists of those points on a line passing through O and proceeding indefinitely, starting at O, in one direction only along the line. A ray still has an infinite length, but only in one direction. Furthermore, a line segment is a part of a line that is bounded by two distinct end points and contains every point on the line between its end points. Depending on how the line segment is defined, either of the two end points may or may not be part of the line segment. A segment is no longer infinite, but is composed of an infinite number of points.",
-            "course_step_url": "https://www.mathsisfun.com/geometry/images/drawing-compass.gif",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module1/ray_segment.png",
             "course_id": 1
         },
         {
             "course_step_inner_id": 4,
             "course_step_text": "Given a point A on a ray starting in O, we use the notations [OA (if O is part of the ray) or (OA (if O is not part of the ray) to determine that ray. A line segment between two points A and B is notated as [AB] or (AB) (depending on whether the points are part of the segment or not). I told you earlier that the segment has length, so we can stick segments together to create larger segments. For example, if we have nine segments of 1 cm, we can put those segments in a line and create a 9 cm segment. Another notion is that of congruence - two segments are congruent if they have equal lengths.",
-            "course_step_url": "https://www.mathsisfun.com/geometry/images/drawing-compass.gif",
             "course_id": 1
         },
         {
             "course_step_inner_id": 5,
             "course_step_text": "See that? There is a 4 cm segment made up by its two halves.",
-            "course_step_url": "https://www.mathsisfun.com/geometry/images/drawing-compass.gif",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module1/segments.png",
             "course_id": 1
         },
         {
             "course_step_inner_id": 7,
-            "course_step_text": "Two lines / rays / segments or any combination of these figures that intersect are called concurrent and their intersection is a single point. If these figures do not intersect, then they are called parallel. In other words, two lines that are parallel never intersect, not even after an infinity, and we can say that their intersection is the empty set. If two intersecting lines form a right (90 degrees) angle, they are not only concurrent, but perpendicular. But what is an angle? In geometry, an angle is the figure formed by two rays, called the sides of the angle, sharing a common endpoint, called the vertex of the angle, i.e. an angle is made up of two rays with the same origin. An angle's size is called measure or magnitude and is measured in degrees.",
-            "course_step_url": "https://www.mathsisfun.com/geometry/images/drawing-compass.gif",
+            "course_step_text": "Two lines / rays / segments or any combination of these figures that intersect are called concurrent and their intersection is a single point. If these figures do not intersect, then they are called parallel. In other words, two lines that are parallel never intersect, not even after an infinity, and we can say that their intersection is the empty set. If two intersecting lines form a right (90 degrees) angle, they are not only concurrent, but perpendicular. But what is an angle? In geometry, an angle is the figure formed by two rays, called the sides or arms of the angle, sharing a common endpoint, called the vertex of the angle, i.e. an angle is made up of two rays with the same origin. An angle's size is called measure or magnitude and is measured in degrees.",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module1/intersections.png",
             "course_id": 1
         },
         {
             "course_step_inner_id": 8,
             "course_step_text": "Angles that have the same measure are said to be equal or congruent. An angle is defined by its measure and is not dependent upon the lengths of the sides of the angle or other factors. That means that all right angles are equal in measure.",
-            "course_step_url": "https://www.mathsisfun.com/geometry/images/drawing-compass.gif",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module1/angle.png",
             "course_id": 1
         },
         {
             "course_step_inner_id": 9,
             "course_step_text": "There are several types of angles, classified by their measure. The smallest angle is the 0 degrees one, when its two sides are actually one single ray. An angle with its measure lower than 90 degrees is an acute angle, while the 90 degrees one is called a right angle. The straight angle is the largest, as its rays go in opposite directions (they actually form a line). The angle larger than the right one but smaller than the straight angle is called an obtuse angle.",
-            "course_step_url": "https://www.mathsisfun.com/geometry/images/drawing-compass.gif",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module1/angle_types.png",
             "course_id": 1
         },
         {
             "course_step_inner_id": 10,
-            "course_step_text": "That's all about angles!",
-            "course_step_url": "https://www.mathsisfun.com/geometry/images/drawing-compass.gif",
+            "course_step_text": "Given an angle, his vertex or origin and a point on each ray, that angle can be denoted by those three points. For example, angle AOB. That's all about angles!",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module1/AOB_angle.png",
             "course_id": 1
         },
         {
@@ -195,92 +194,74 @@
     "test_steps": [
         {
             "test_step_inner_id": 1,
-            "test_step_text": "a",
-            "test_step_ans": "a",
-            "course_id": 1
-        },
-        {
-            "test_step_inner_id": 1,
-            "test_step_text": "b",
-            "test_step_ans": "b",
-            "course_id": 1
-        },
-        {
-            "test_step_inner_id": 1,
-            "test_step_text": "c",
-            "test_step_ans": "c",
+            "test_step_text": "What do we use a geometric instrument for?",
+            "test_step_ans": "We user a geometric instrument for drawing figures.",
             "course_id": 1
         },
         {
             "test_step_inner_id": 2,
-            "test_step_text": "d",
-            "test_step_ans": "d",
+            "test_step_text": "What is the condition for several points to be collinear?",
+            "test_step_ans": "The points must be on the same line.",
             "course_id": 1
         },
         {
             "test_step_inner_id": 2,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "Why two points are always collinear?",
+            "test_step_ans": "We can always draw a line joining the 2 points.",
             "course_id": 1
         },
         {
             "test_step_inner_id": 2,
-            "test_step_text": "e",
-            "test_step_ans": "e",
+            "test_step_text": "How can we prove that several points are collinear?",
+            "test_step_ans": "We can always draw a line joining the points.",
             "course_id": 1
         },
         {
             "test_step_inner_id": 3,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "Can we measure a line's length?",
+            "test_step_ans": "No.",
             "course_id": 1
         },
         {
             "test_step_inner_id": 3,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "How can we measure a segment's length?",
+            "test_step_ans": "By using a ruler.",
             "course_id": 1
         },
         {
             "test_step_inner_id": 3,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "How can we measure an angle's size?",
+            "test_step_ans": "By using a protractor.",
             "course_id": 1
         },
         {
             "test_step_inner_id": 4,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "What is the condition for two segments to be congruent?",
+            "test_step_ans": "They should have the same size.",
             "course_id": 1
         },
         {
             "test_step_inner_id": 4,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "What is the condition for two lines to be parallel?",
+            "test_step_ans": "They must not intersect.",
             "course_id": 1
         },
         {
             "test_step_inner_id": 4,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "What is the condition for two lines to be perpendicular?",
+            "test_step_ans": "Their intersection must form a 90 degrees angle.",
             "course_id": 1
         },
         {
             "test_step_inner_id": 5,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "What is the condition for two angles to be congruent?",
+            "test_step_ans": "They must have the same measure.",
             "course_id": 1
         },
         {
             "test_step_inner_id": 5,
-            "test_step_text": "a",
-            "test_step_ans": "a",
-            "course_id": 1
-        },
-        {
-            "test_step_inner_id": 5,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "What's the name of the largest angle?",
+            "test_step_ans": "The straight angle.",
             "course_id": 1
         },
         {

@@ -8,7 +8,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <img src="images/uni_logo.png" alt="UPB Logo">
+  <img src="images_readme/uni_logo.png" alt="UPB Logo">
 
   <h1 align="center">Math-Bot</h3>
 
@@ -163,4 +163,4 @@ Project Link: [Math-Bot](https://github.com/AlinGeorgescu/Math-Bot)
 [license-url]: https://github.com/AlinGeorgescu/Math-Bot/blob/master/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/alin-georgescu-464783119/
-[product-screenshot]: images/screenshot.png
+[product-screenshot]: images_readme/screenshot.png
