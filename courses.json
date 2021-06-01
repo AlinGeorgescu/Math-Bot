@@ -8,7 +8,7 @@
         },
         {
             "course_name": "module2",
-            "course_description": "Geometry Basics II module teaches Plane Geometric figures. The course lasts about 20 minutes, after that, you will have a 10 minutes test.",
+            "course_description": "Geometry Basics II module teaches more Plane Geometric figures. The course lasts about 20 minutes, after that, you will have a 10 minutes test.",
             "course_num_steps": 11,
             "course_num_questions": 5
         },
@@ -51,7 +51,7 @@
         },
         {
             "course_step_inner_id": 7,
-            "course_step_text": "Two lines / rays / segments or any combination of these figures that intersect are called concurrent and their intersection is a single point. If these figures do not intersect, then they are called parallel. In other words, two lines that are parallel never intersect, not even after an infinity, and we can say that their intersection is the empty set. If two intersecting lines form a right (90 degrees) angle, they are not only concurrent, but perpendicular. But what is an angle? In geometry, an angle is the figure formed by two rays, called the sides or arms of the angle, sharing a common endpoint, called the vertex of the angle, i.e. an angle is made up of two rays with the same origin. An angle's size is called measure or magnitude and is measured in degrees.",
+            "course_step_text": "Two lines / rays / segments or any combination of these figures that intersect are called concurrent and their intersection is a single point. If these figures do not intersect, then they are called parallel. In other words, two lines that are parallel never intersect, not even after an infinity, and we can say that their intersection is the empty set. If two intersecting lines form a right (90 degrees) angle, they are not only concurrent, but perpendicular. But what is an angle? In geometry, an angle is the figure formed by two rays, called the sides or arms of the angle, sharing a common endpoint, called the vertex of the angle, i.e. an angle is made up of two rays with the same origin. An angle's size is called measure or magnitude and is measured in degrees. You can use a protractor to draw / measure angles.",
             "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module1/intersections.png",
             "course_id": 1
         },
@@ -75,52 +75,61 @@
         },
         {
             "course_step_inner_id": 1,
-            "course_step_text": "a",
+            "course_step_text": "You now have the basic knowledge and you can start drawing more advanced figures. In geometry, a polygon is a plane figure that is described by a finite number of straight line segments connected to form a closed polygonal chain. The segments of a polygonal circuit are called its edges or sides. The points where two edges meet are the polygon's vertices (singular: vertex) or corners. The interior of a solid polygon is sometimes called its body. The simplest polygon is the triangle, the geometric figure which has three sides and three angles. For example, the triangle ABC has three angles, A, B, and C and is formed by three segments, [AB], [BC], [CA].",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module2/triangle.png",
             "course_id": 2
         },
         {
             "course_step_inner_id": 2,
-            "course_step_text": "a",
+            "course_step_text": "Hmmm... But a triangle can be drawn under many forms, right? Yes, that is true, we have several types of triangles. There are three special names given to triangles that tell how many sides (or angles) are equal: Equilateral Triangle (3 equal sides and angles), Isosceles Triangle (2 equal sides and angles), and Scalene Triangle (no equal sides / angles). As you can see, the triangles have the special property of having the number of equal sides the same as the number of equal angles. Triangles can also have names that tell you what type of angles they have: Acute Triangle (all angles are less than 90 degrees), Right Triangle (has a right angle), and Obtuse Triangle (has an angle more than 90 degrees). But sometimes we can combine the names, for example the Right Isosceles Triangle has two equal sides and angles, while the third angle is a right one.",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module2/triangles.png",
             "course_id": 2
         },
         {
             "course_step_inner_id": 3,
-            "course_step_text": "a",
+            "course_step_text": "Triangles are cool. In every triangle of every type, the sum of all three angles is 180 degrees. Another cool thing is that as a triangle is made out of three line segments, and as segments have length a triangle also has a length of its own and is called perimeter (P). Think about having a garden in the shape of a triangle. If we walk by its sides and measure them, we will get the garden's perimeter. But we can also measure the area of the garden (or triangle's). The area (A) is half of the base times height. Any edge can be the base, while the height is the distance from the opposite corner to that edge.",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module2/measures.png",
             "course_id": 2
         },
         {
             "course_step_inner_id": 4,
-            "course_step_text": "a",
+            "course_step_text": "If we move to more advanced polygons we get to quadrilaterals, or polygons with four sides. The simplest regular quadrilateral is the Parallelogram, which has its sides parallel and equal two by two. It also has its opposite angles equal two by two. The sum of angles that share a side in the parallelogram is 180 degrees, thus the sum of all its angles is 360 degrees. The perimeter of a parallelogram is 2(X + Y) where X and Y are the lengths of adjacent sides and its area is the base times height, where any side can be the base and the height is the distance to the parallel side.",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module2/parallelogram.png",
             "course_id": 2
         },
         {
             "course_step_inner_id": 5,
-            "course_step_text": "a",
+            "course_step_text": "If we have a parallelogram with one right angle (thus all its angles are right), we get a rectangle. The rectangle has all the properties of the parallelogram plus the fact that the height is an edge itself, therefore its area is equal to the product of its sides.",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module2/rectangle.png",
             "course_id": 2
         },
         {
             "course_step_inner_id": 7,
-            "course_step_text": "a",
+            "course_step_text": "If we have a parallelogram with all its edges equal, we get a rhombus, the diamond like shape. Don't forget that opposite sides are parallel, and opposite angles are equal. The area (A) is still half of the base times height or half the product of its diagonals. A diagonal is the line segment between two opposite vertices.",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module2/rhombus.png",
             "course_id": 2
         },
         {
             "course_step_inner_id": 8,
-            "course_step_text": "a",
+            "course_step_text": "But what if we add a right angle to a rhombus? It would be an equal sided rectangle, or better said, a square! The square is the figure with all its four angles equal (90 degrees) and all its edges equal. So if we know the size of an edge, we know the size of every edge. The square's perimeter will be 4 times that size, while its area would be that size multiplied by itself, in other words the *square* of the length of a side.",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module2/square.png",
             "course_id": 2
         },
         {
             "course_step_inner_id": 9,
-            "course_step_text": "a",
+            "course_step_text": "One more quadrilater is the trapezium, a figure with two parallel sides, called bases and two lateral sides. I will not get into details, but you can see in the picture below several types of trapeziums. Cool stuff can be done with it, it's like a cut triangle. :P",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module2/trapezium.png",
             "course_id": 2
         },
         {
             "course_step_inner_id": 10,
-            "course_step_text": "a",
+            "course_step_text": "A special geometric figure is the circle, the collection points of infinite size equally distanced from its center or origin. The Radius is that distance from the center outwards. The Diameter is the double of the radius, i.e. the distance between points on the circle, situated on opposite sides. We can also calculate the length of the cirlce (called circumference) and its area, but is a little bit trickier. The circumference, or the distance once around the circle, is equal to the diameter multiplied by PI, where PI is a special number, with an infinite number of decimal places (PI = 3.14...). The area is equal to the square of the radius multiplied by the same number PI. You can remember this easier with this joke: \"Pie Are Squared\" (even though pies are usually round). You can use a compass to draw a circle.",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module2/circle.png",
             "course_id": 2
         },
         {
             "course_step_inner_id": 11,
-            "course_step_text": "a",
+            "course_step_text": "By the way, the awesome word encyclopedia literally means \"circle of learning\", so keep circling around!",
             "course_id": 2
         },
         {
@@ -181,8 +190,8 @@
             "course_id": 1
         },
         {
-            "mid_question_text": "a",
-            "mid_question_ans": "a",
+            "mid_question_text": "What's a vertex of a polygon?",
+            "mid_question_ans": "The points where two edges meet.",
             "course_id": 2
         },
         {
@@ -266,92 +275,74 @@
         },
         {
             "test_step_inner_id": 1,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "How many sides and angles does a triangle have?",
+            "test_step_ans": "Three sides and three angles.",
             "course_id": 2
         },
         {
             "test_step_inner_id": 1,
-            "test_step_text": "a",
-            "test_step_ans": "a",
-            "course_id": 2
-        },
-        {
-            "test_step_inner_id": 1,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "How many sides and angles does a square have?",
+            "test_step_ans": "Four sides and four angles.",
             "course_id": 2
         },
         {
             "test_step_inner_id": 2,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "What's the relationship between equal sides of a triangle and the equal angles?",
+            "test_step_ans": "The number of equal sides is equal to the number of equal angles.",
             "course_id": 2
         },
         {
             "test_step_inner_id": 2,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "How are the angles in an acute triangle?",
+            "test_step_ans": "All angles are less than 90 degrees in an acute triangle.",
             "course_id": 2
         },
         {
             "test_step_inner_id": 2,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "What is a Right Isosceles Triangle?",
+            "test_step_ans": "It is a triangle which has two equal sides and a right angle.",
             "course_id": 2
         },
         {
             "test_step_inner_id": 3,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "What is the perimeter of a figure?",
+            "test_step_ans": "The perimeter is the sum of the lengths of the figure's edges.",
             "course_id": 2
         },
         {
             "test_step_inner_id": 3,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "What is the unit of measurement for the perimeter?",
+            "test_step_ans": "Meter.",
             "course_id": 2
         },
         {
             "test_step_inner_id": 3,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "What is the unit of measurement for the perimeter?",
+            "test_step_ans": "Square meter.",
             "course_id": 2
         },
         {
             "test_step_inner_id": 4,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "What is a diagonal in a quadrilater?",
+            "test_step_ans": "A diagonal is the line segment between two opposite vertices.",
             "course_id": 2
         },
         {
             "test_step_inner_id": 4,
-            "test_step_text": "a",
-            "test_step_ans": "a",
-            "course_id": 2
-        },
-        {
-            "test_step_inner_id": 4,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "If we cut off a triangle's tip with a line parallel to one of the triangle's sides, what shape do we get?",
+            "test_step_ans": "A trapezium.",
             "course_id": 2
         },
         {
             "test_step_inner_id": 5,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "What is the radius of a circle? Think about the center of the circle and a point on the circle.",
+            "test_step_ans": "The Radius is the distance from the center to a point on the circle.",
             "course_id": 2
         },
         {
             "test_step_inner_id": 5,
-            "test_step_text": "a",
-            "test_step_ans": "a",
-            "course_id": 2
-        },
-        {
-            "test_step_inner_id": 5,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "What is the circumference of a circle?",
+            "test_step_ans": "The distance once around the circle.",
             "course_id": 2
         },
         {
