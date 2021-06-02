@@ -15,7 +15,7 @@
         {
             "course_name": "module3",
             "course_description": "Geometry Basics III module teaches basic definitions in Solid Geometry. The course lasts about 20 minutes, after that, you will have a 10 minutes test.",
-            "course_num_steps": 11,
+            "course_num_steps": 10,
             "course_num_questions": 5
         }
     ],
@@ -134,52 +134,55 @@
         },
         {
             "course_step_inner_id": 1,
-            "course_step_text": "a",
+            "course_step_text": "Solid Geometry is the geometry of three-dimensional space, the kind of space we live in. It is called three-dimensional, or 3D, because there are three dimensions: width, depth and height. 3D geometric figures or solids, for short, have some properies - volume (or how much water it could hold), surface area (or the area you would have to paint), number of vertices (corners), or number of faces they have. Furthermore, solids can be classified in two categories: polyhedra (they only have flat faces) or non-polyhedra (when they have non-flat faces, such us curves).",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module3/3d.png",
             "course_id": 3
         },
         {
             "course_step_inner_id": 2,
-            "course_step_text": "a",
+            "course_step_text": "Let's talk about polyhedral figures first. A prism is a solid object with: identical and parallel ends, flat faces and the same cross section all along its length. The parallel ends are called bases, while the other flat faces are called sides and are parallelograms or derivates of a parallelogram (rectangle, square). The surface area of a prism is the sum of the areas of its faces. The volume of a prism is equal to the its height multiplied by the area of one of its bases.",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module3/prism.png",
             "course_id": 3
         },
         {
             "course_step_inner_id": 3,
-            "course_step_text": "a",
+            "course_step_text": "A special kind of prism is the rectangular one and is called the cuboid. It has six flat faces and all angles are right angles. And all of its faces are rectangles, so it looks like a box. The volume is calculated the same as for a normal prism, it's just the base area that is easier to calculate, because it's a rectangle.",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module3/cuboid.png",
             "course_id": 3
         },
         {
             "course_step_inner_id": 4,
-            "course_step_text": "a",
+            "course_step_text": "If we set even more restrictions, we get to the cube, which is a cuboid with all its faces squares. Because all its edges are of equal length, the volume is calculated in a very easy manner - edge length times edge length times edge length, or the *cube* of the length. A dice is an exampe of a cube.",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module3/cube.png",
             "course_id": 3
         },
         {
             "course_step_inner_id": 5,
-            "course_step_text": "a",
+            "course_step_text": "Enough with the prisms, they are so many! Let's talk about the pyramids, not those of Egypt, but the geometric ones. A pyramid is a structure whose outer surfaces are triangular and converge to a single step at the top, making the shape roughly a pyramid in the geometric sense. The top of the pyramid is called an apex. The base of a pyramid can be a triangle, quadrilater, or another polygon. As such, a pyramid has at least three outer triangular surfaces (at least four faces including the base). If they have four sides and a square base they are called a square pyramid. If they have three sides and a triangular base they are called a tetrahedron. The volume is the third time of the base area times the pyramid's height, regardless of the pyramid's type.",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module3/pyramid.png",
             "course_id": 3
         },
         {
             "course_step_inner_id": 7,
-            "course_step_text": "a",
+            "course_step_text": "Now, let's see some non-polyhedral solids. Let's start with the cone, solid made up by a circle base, a point at the other end and a curved side. The apex can be aligned with the center of the base, or may not, resulting in an oblique cone. The surface area of the cone is the area of the base added to the area of the curve, which is a little harder to calculate - PI times the radius of the base times the length of the slant / slope. The volume is equal to one third of the squared base radius times the cone's height times PI.",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module3/cone.png",
             "course_id": 3
         },
         {
             "course_step_inner_id": 8,
-            "course_step_text": "a",
+            "course_step_text": "Another solid is the cylinder and you can think about it as the section of a pipe. The cylinder is the solid with two parallel circle faces. The surface area of a cylinder is the sum of the bases' area plus the lateral side area. The lateral side area is calculated as follows: two times PI times the base's radius times the cylinder's height. Simpler said, it's a rectangle with one edge equal to the circumference of the base and one edge equal to the cylinder's  height. The volume of the cylinder is equal to the area of a base times its height.",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module3/cylinder.png",
             "course_id": 3
         },
         {
             "course_step_inner_id": 9,
-            "course_step_text": "a",
+            "course_step_text": "A very special 3D figure is the sphere - the bowling ball. It's a perfectly symmetrical non-polyhedron, with all points on the surface at the same distance r from the center. It has no edges or corners and is made up by only one curve surface. The surface area of a sphere is 4 times the square radius times PI. It's volume is equal to four thirds of the radius' cube times PI.",
+            "course_step_url": "https://raw.githubusercontent.com/AlinGeorgescu/Math-Bot/master/images_course/module3/sphere.png",
             "course_id": 3
         },
         {
             "course_step_inner_id": 10,
-            "course_step_text": "a",
-            "course_id": 3
-        },
-        {
-            "course_step_inner_id": 11,
-            "course_step_text": "a",
+            "course_step_text": "Of all the shapes, a sphere has the smallest surface area for a volume. Or put another way it can contain the greatest volume for a fixed surface area. We can demonstrate this by blowing up a balloon. It naturally forms a sphere because it is trying to hold as much air as possible with as small a surface as possible.",
             "course_id": 3
         }
     ],
@@ -195,8 +198,8 @@
             "course_id": 2
         },
         {
-            "mid_question_text": "a",
-            "mid_question_ans": "a",
+            "mid_question_text": "What are polyhedral solids?",
+            "mid_question_ans": "Solids with flat faces only.",
             "course_id": 3
         }
     ],
@@ -347,92 +350,50 @@
         },
         {
             "test_step_inner_id": 1,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "How many faces does a cuboid have?",
+            "test_step_ans": "Six.",
             "course_id": 3
         },
         {
             "test_step_inner_id": 1,
-            "test_step_text": "a",
-            "test_step_ans": "a",
-            "course_id": 3
-        },
-        {
-            "test_step_inner_id": 1,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "How many faces does a cube have?",
+            "test_step_ans": "Six.",
             "course_id": 3
         },
         {
             "test_step_inner_id": 2,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "What geometric solid is a dice?",
+            "test_step_ans": "A cube.",
             "course_id": 3
         },
         {
             "test_step_inner_id": 2,
-            "test_step_text": "a",
-            "test_step_ans": "a",
-            "course_id": 3
-        },
-        {
-            "test_step_inner_id": 2,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "What geometric solid is a pipe's section?",
+            "test_step_ans": "A cylinder.",
             "course_id": 3
         },
         {
             "test_step_inner_id": 3,
-            "test_step_text": "a",
-            "test_step_ans": "a",
-            "course_id": 3
-        },
-        {
-            "test_step_inner_id": 3,
-            "test_step_text": "a",
-            "test_step_ans": "a",
-            "course_id": 3
-        },
-        {
-            "test_step_inner_id": 3,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "What's the relationship between surface area and volume for a sphere?",
+            "test_step_ans": "A sphere has the smallest surface area for a volume.",
             "course_id": 3
         },
         {
             "test_step_inner_id": 4,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "What geometric figure is the cylinder's base?",
+            "test_step_ans": "A circle.",
             "course_id": 3
         },
         {
             "test_step_inner_id": 4,
-            "test_step_text": "a",
-            "test_step_ans": "a",
-            "course_id": 3
-        },
-        {
-            "test_step_inner_id": 4,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "What geometric figure is the cone's base?",
+            "test_step_ans": "A circle.",
             "course_id": 3
         },
         {
             "test_step_inner_id": 5,
-            "test_step_text": "a",
-            "test_step_ans": "a",
-            "course_id": 3
-        },
-        {
-            "test_step_inner_id": 5,
-            "test_step_text": "a",
-            "test_step_ans": "a",
-            "course_id": 3
-        },
-        {
-            "test_step_inner_id": 5,
-            "test_step_text": "a",
-            "test_step_ans": "a",
+            "test_step_text": "What kind of prism is the cuboid?",
+            "test_step_ans": "A rectangular prism.",
             "course_id": 3
         }
     ]
