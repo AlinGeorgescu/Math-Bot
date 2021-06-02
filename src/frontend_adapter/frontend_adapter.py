@@ -97,7 +97,13 @@ def help_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
         "/score \- ask me your score 🦾\n"
         "/cancel \- close the current course or test 😔\n"
         "/quit \- close the conversation and I'll forget everything 😥\n"
-        "/time \- get the current time 🤷‍\n"
+        "/time \- get the current time 🤷‍\n\n"
+        "When you get to a lesson, you will receive a text message and even a "
+        "photo\. When you get to a question, you will receive the question's "
+        "text and you will have to answer\. The answer should be as clear as "
+        "possible and should not use abbreviations\. The bot will tell you if "
+        "your answer is correct or not\.\n"
+        "Only test questions have score \(1 point\)\."
     )
 
 def gdpr_cmd(update: tg.Update, _: tge.CallbackContext) -> None:
