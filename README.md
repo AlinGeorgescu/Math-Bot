@@ -146,6 +146,8 @@ Project Link: [Math-Bot](https://github.com/AlinGeorgescu/Math-Bot)
 ## Acknowledgements
 * [Othneil Drew](https://github.com/othneildrew/Best-README-Template) -
   README template
+* [Rod Pierce & Math is fun](http://www.mathsisfun.com) - Some graphics for the
+  courses
 
 <!-- MARKDOWN LINKS & IMAGES -->
 [contributors-shield]: https://img.shields.io/github/contributors/AlinGeorgescu/Math-Bot.svg?style=for-the-badge

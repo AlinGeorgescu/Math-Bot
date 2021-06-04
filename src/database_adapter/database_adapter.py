@@ -119,7 +119,13 @@ def populate_postgres():
                         sql.SQL(", ").join(map(sql.Literal, values)),
                     )
 
-            cursor.execute(query)
+            try:
+                cursor.execute(query)
+            except psycopg2.DatabaseError as err:
+                cursor.close()
+                CONN.rollback()
+                LOGGER.critical(err.pgcode, err.pgerror)
+                sys.exit()
 
     # Check the existence of "course_steps" table (and create it).
     cursor.execute(
@@ -158,7 +164,13 @@ def populate_postgres():
                         sql.SQL(", ").join(map(sql.Literal, values)),
                     )
 
-            cursor.execute(query)
+            try:
+                cursor.execute(query)
+            except psycopg2.DatabaseError as err:
+                cursor.close()
+                CONN.rollback()
+                LOGGER.critical(err.pgcode, err.pgerror)
+                sys.exit()
 
     # Check the existence of "mid_questions" table (and create it).
     cursor.execute(
@@ -196,7 +208,13 @@ def populate_postgres():
                         sql.SQL(", ").join(map(sql.Literal, values)),
                     )
 
-            cursor.execute(query)
+            try:
+                cursor.execute(query)
+            except psycopg2.DatabaseError as err:
+                cursor.close()
+                CONN.rollback()
+                LOGGER.critical(err.pgcode, err.pgerror)
+                sys.exit()
 
     # Check the existence of "test_steps" table (and create it).
     cursor.execute(
@@ -235,7 +253,13 @@ def populate_postgres():
                         sql.SQL(", ").join(map(sql.Literal, values)),
                     )
 
-            cursor.execute(query)
+            try:
+                cursor.execute(query)
+            except psycopg2.DatabaseError as err:
+                cursor.close()
+                CONN.rollback()
+                LOGGER.critical(err.pgcode, err.pgerror)
+                sys.exit()
 
     # Check the existence of "users" table (and create it).
     cursor.execute(
