@@ -190,7 +190,7 @@ def populate_postgres():
                 mid_question_id SERIAL2 PRIMARY KEY,
                 mid_question_text VARCHAR(255) NOT NULL,
                 mid_question_ans VARCHAR(255) NOT NULL,
-                course_id INT2 NOT NULL,
+                course_id INT2 NOT NULL UNIQUE,
                 CONSTRAINT fk_course_id
                     FOREIGN KEY(course_id)
                     REFERENCES courses(course_id)

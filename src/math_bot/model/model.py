@@ -71,7 +71,7 @@ def data_loader(vocab_path, model_path):
         vocab_dict = json.load(fin)
 
     vocab = defaultdict(lambda: 0, vocab_dict)
-    model = siamese(vocab_size=len(vocab))
+    model = siamese(len(vocab), 256)
     model.init_from_file(model_path)
 
     return (vocab, model)

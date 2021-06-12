@@ -11,20 +11,33 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.9
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+        python-version: 3.8
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install pylint pytest
-        if [ -f src/requirements.txt ]; then pip install -r src/requirements.txt; fi
+        python -m pip install pylint
+        if [ -f src/database_adapter/requirements.txt ]; then
+          pip install -r src/database_adapter/requirements.txt
+        fi
+        if [ -f src/frontend_adapter/requirements.txt ]; then
+          pip install -r src/frontend_adapter/requirements.txt
+        fi
+        if [ -f src/math_bot/requirements.txt ]; then
+          pip install -r src/math_bot/requirements.txt
+        fi
     - name: Lint with pylint
       run: |
-        python -m pylint src/math_bot.py
+        python -m pylint src/database_adapter/database_adapter.py
+        python -m pylint src/frontend_adapter/frontend_adapter.py
+        python -m pylint src/math_bot/model/model.py
+        python -m pylint src/math_bot/math_bot.py
+    - name: Build Docker images
+      run: |
+        # adaug github secrets - env-urile
+        # public imaginile pe docker hub
