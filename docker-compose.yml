@@ -69,6 +69,8 @@ services:
       env_file:
         - ./database_adapter_con_info.env
         - ./math_bot_con_info.env
+      volumes:
+        - ./logs/user_input.csv:/tmp/logs/user_input.csv
       command: --debug  # This should be deleted in a production environment.
       networks:
         - db_adapt_net

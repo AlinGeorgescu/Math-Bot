@@ -637,6 +637,8 @@ def recv_msg():
 
         # Compare the answer to the reference question.
         result = predict((msg, ref), COMPARE_THRESHOLD, MODEL, VOCAB)
+        RESPONE_LOGGER.info("\"%s\",\"%s\",%d", msg, ref, result)
+
         if result:
             if test_step_id != 0:
                 req = requests.put(f"{DB_ADAPT_HOST}/api/user/{user_id}/score")
@@ -689,7 +691,7 @@ if __name__ == "__main__":
                         datefmt="%Y-%m-%d %H:%M:%S")
     logging.Formatter.converter = localtime
     logging.StreamHandler(sys.stdout)
-    # The logging module
+    # The debugging logging module
     LOGGER = logging.getLogger(__name__)
 
     if DEBUG:
@@ -715,5 +717,12 @@ if __name__ == "__main__":
     COMPARE_THRESHOLD = 0.5
     (VOCAB, MODEL) = data_loader("model/data/en_vocab.txt",
                                  "model/trax_model/model.pkl.gz")
+
+    # The user responses to be used for retraining the model.
+    RESPONE_LOGGER = logging.getLogger("Response logger")
+    handler = logging.FileHandler("/tmp/logs/user_input.csv", "w")
+    RESPONE_LOGGER.addHandler(handler)
+    RESPONE_LOGGER.setLevel(logging.INFO)
+    RESPONE_LOGGER.info("message, reference, prediction")
 
     app.run(host=math_bot_addr, port=math_bot_port, debug=DEBUG)
