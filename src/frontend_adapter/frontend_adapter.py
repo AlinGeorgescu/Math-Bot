@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# pylint: disable=W1401
+# pylint: disable=W1401,R0911,R0912
 
 """
 Alin Georgescu

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# pylint: disable=E1101,R0912,R0915
 
 """
 Alin Georgescu
@@ -70,8 +71,7 @@ def init_postgres_con():
 
 def populate_postgres():
     """
-    Check if the table schema is correct. If the tables don't exist, they are
-    created and populated.
+    Check if the table schema is correct and create the tables if necessary.
     """
 
     data_file = os.environ.get("DATA_FILE", "courses.json")
@@ -957,19 +957,13 @@ def test_step_max_get(course_id=None):
 @app.route("/", methods=["GET"])
 def default():
     """
-    A default route used for debugging.
-
     Returns:
         Response: - 200.
     """
 
     return Response(
         status=200,
-        response=""" <html>
-                     <body>
-                     <h1>This is the database adaptor.</h1>
-                     </body>
-                     </html> """,
+        response="<html><body><h1>This is the db adapter.</h1></body></html>",
         mimetype="text/html"
     )
 
@@ -995,11 +989,10 @@ if __name__ == "__main__":
 
     LOGGER.info("Database adapter started!")
 
-    db_adapt_port = int(os.getenv("DB_ADAPT_PORT", "5000"))
-    db_adapt_addr = os.getenv("DB_ADAPT_ADDR", "0.0.0.0")
-
     # Database connection controller object
     CONN = init_postgres_con()
     populate_postgres()
 
+    db_adapt_port = int(os.getenv("DB_ADAPT_PORT", "5000"))
+    db_adapt_addr = os.getenv("DB_ADAPT_ADDR", "0.0.0.0")
     app.run(host=db_adapt_addr, port=db_adapt_port, debug=DEBUG)

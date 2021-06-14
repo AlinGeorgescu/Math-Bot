@@ -1,3 +1,4 @@
+[![Build status][build-shield]][build-url]
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -150,6 +151,8 @@ Project Link: [Math-Bot](https://github.com/AlinGeorgescu/Math-Bot)
   courses
 
 <!-- MARKDOWN LINKS & IMAGES -->
+[build-shield]: https://img.shields.io/github/workflow/status/AlinGeorgescu/Math-Bot/build/master?style=for-the-badge
+[build-url]: https://github.com/AlinGeorgescu/Math-Bot/actions/workflows/python-app.yml
 [contributors-shield]: https://img.shields.io/github/contributors/AlinGeorgescu/Math-Bot.svg?style=for-the-badge
 [contributors-url]: https://github.com/AlinGeorgescu/Math-Bot/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/AlinGeorgescu/Math-Bot.svg?style=for-the-badge

@@ -23,9 +23,7 @@ services:
         - db_admin
 
     database_adapter:
-      build:
-        context: ./
-        dockerfile: ./src/database_adapter/Dockerfile
+      image: alingeorgescu/database_adapter
       container_name: database_adapter
       depends_on:
         - database
@@ -57,9 +55,7 @@ services:
         - db_admin
 
     math_bot:
-      build:
-        context: ./
-        dockerfile: ./src/math_bot/Dockerfile
+      image: alingeorgescu/math_bot
       container_name: math_bot
       depends_on:
         - database_adapter
@@ -77,9 +73,7 @@ services:
         - frontend_net
 
     frontend_adapter:
-      build:
-        context: ./
-        dockerfile: ./src/frontend_adapter/Dockerfile
+      image: alingeorgescu/frontend_adapter
       container_name: frontend_adapter
       depends_on:
         - math_bot
