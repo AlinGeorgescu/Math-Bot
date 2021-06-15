@@ -1,5 +1,6 @@
 model/media
 model/SiameseLSTM.ipynb
+model/GloVeSiameseLSTM.ipynb
 **/__pycache__
 **/.ipynb_checkpoints
 **/*.pyc
