@@ -714,7 +714,7 @@ if __name__ == "__main__":
     # course question).
     WAIT_ANS = dict()
 
-    COMPARE_THRESHOLD = 0.5
+    COMPARE_THRESHOLD = 0.6
     (VOCAB, MODEL) = data_loader("model/data/en_vocab.txt",
                                  "model/trax_model/model.pkl.gz")
 
