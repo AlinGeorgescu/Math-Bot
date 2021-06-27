@@ -149,6 +149,8 @@ Project Link: [Math-Bot](https://github.com/AlinGeorgescu/Math-Bot)
   README template
 * [Rod Pierce & Math is fun](http://www.mathsisfun.com) - Some graphics for the
   courses
+* Aritmetică, Algebră, Geometrie: clasa a V-a: anul școlar 2009-2010, Ediția a
+  14-a, Pitești, România, Editura Paralela 45, 2009 - Some texts for the courses
 
 <!-- MARKDOWN LINKS & IMAGES -->
 [build-shield]: https://img.shields.io/github/workflow/status/AlinGeorgescu/Math-Bot/build/master?style=for-the-badge

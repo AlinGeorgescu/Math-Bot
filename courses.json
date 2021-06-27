@@ -260,8 +260,8 @@
         },
         {
             "test_step_inner_id": 4,
-            "test_step_text": "What is the condition for two lines to be perpendicular?",
-            "test_step_ans": "Their intersection must form a 90 degrees angle.",
+            "test_step_text": "How is called the point where two lines met?",
+            "test_step_ans": "Intersection.",
             "course_id": 1
         },
         {
